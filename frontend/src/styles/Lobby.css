@@ -1,0 +1,103 @@
+/* src/styles/Lobby.css */
+.lobby-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #fdfaf2;
+    border: 5px solid #8c6a4d;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.lobby-container h1, .lobby-container h2 {
+    text-align: center;
+    color: #5a3d25;
+}
+
+.name-setter, .room-creator {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f5e8d5;
+    border-radius: 8px;
+}
+
+.name-setter input, .room-creator input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 2px solid #d3bda7;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.name-setter button, .room-creator button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.name-setter button:hover, .room-creator button:hover {
+    background-color: #45a049;
+}
+
+.lobby-container hr {
+    border: none;
+    height: 2px;
+    background-color: #d3bda7;
+    margin: 30px 0;
+}
+
+.room-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.room-item {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr;
+    align-items: center;
+    padding: 15px;
+    background-color: #fff;
+    border: 2px solid #e4cfa9;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.room-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.room-name {
+    font-weight: bold;
+    color: #5a3d25;
+}
+
+.room-players {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.room-item button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #008CBA;
+    color: white;
+    cursor: pointer;
+}
+
+.room-item button:disabled {
+    background-color: #a9a9a9;
+    cursor: not-allowed;
+}

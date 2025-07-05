@@ -1,0 +1,108 @@
+/* src/styles/Board.css */
+.board-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.board-grid {
+    display: grid;
+    grid-template-columns: repeat(11, 60px);
+    grid-template-rows: repeat(11, 60px);
+    border: 2px solid #8c6a4d;
+    background-color: #f5e8d5;
+}
+
+.square {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #d3bda7;
+    box-sizing: border-box;
+    font-size: 10px;
+    text-align: center;
+    padding: 5px;
+    background-color: #fdfaf2;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.square-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+}
+
+.square-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 12px;
+}
+
+.square-price {
+    font-size: 10px;
+    margin-top: auto;
+}
+
+.player-tokens-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    width: 100%;
+    height: 20px;
+    margin-top: 5px;
+}
+
+.player-token {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin: 0 2px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 9px;
+    text-shadow: 1px 1px 0 black;
+}
+
+/* Màu cạnh cho các nhóm */
+.era1 { border-width: 5px; } /* Màu sẽ được set bằng inline style trong component */
+.era2 { border-width: 5px; }
+.era3 { border-width: 5px; }
+.era4 { border-width: 5px; }
+.era5 { border-width: 5px; }
+.era6 { border-width: 5px; }
+.era7 { border-width: 5px; }
+.era8 { border-width: 5px; }
+
+/* Стиль cho các ô góc */
+.corner-square {
+    background-image: none !important; /* Override background image */
+    background-color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Vùng trung tâm */
+/* .board-grid .center-area {
+    grid-column: 4 / 8;
+    grid-row: 4 / 8;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 2px dashed #8c6a4d;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    text-align: center;
+} */
