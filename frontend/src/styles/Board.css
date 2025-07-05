@@ -3,7 +3,7 @@
 .board-container {
   display: grid;
   grid-template-columns: 1.6fr repeat(8, 1.1fr) 1.6fr;
-  grid-template-rows: repeat(10, 1fr);
+  grid-template-rows: 1.6fr repeat(8, 1.1fr) 1.6fr;
   width: 120vmin;
   height: 98vmin;
   max-width: 1200px;
@@ -71,7 +71,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 18px;
+    margin-top: -10px;
     font-size: clamp(0.5rem, 1vw, 0.7rem);
     line-height: 1.2;
     text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
@@ -92,63 +92,87 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 18px;
+    height: 12px;
     /* border-radius: 4px 4px 0 0; */
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), transparent);
+}
+.square-color-header-2{
+    position: absolute;
+    top: 0!important;
+    right: 0 !important;
+    left: unset;
+    width: 12px !important;
+    height: 100% !important;
+}
+
+.square-color-header-4 {
+    position: absolute;
+    top: 0 !important;
+    left: 0 !important;
+    width: 12px !important;
+    height: 100% !important;
 }
 
 /* Era Color Schemes - More vibrant and distinct */
 .square.era1 { 
-    background: linear-gradient(135deg, #D2B48C, #C19A6B);
+    /* background: linear-gradient(135deg, #D2B48C, #C19A6B); */
+    background: url('../../public/assets/nui2.png') center/100% 100% no-repeat !important;
 }
 .square.era1 .square-color-header { 
     background: linear-gradient(135deg, #8B7355, #A0522D);
 }
 
 .square.era2 { 
-    background: linear-gradient(135deg, #ADD8E6, #87CEEB);
+    /* background: linear-gradient(135deg, #ADD8E6, #87CEEB); */
+    background: url('../../public/assets/nui2.png') center/100% 100% no-repeat !important;
 }
 .square.era2 .square-color-header { 
     background: linear-gradient(135deg, #4682B4, #5F9EA0);
 }
 
 .square.era3 { 
-    background: linear-gradient(135deg, #E6E6FA, #DDA0DD);
+    /* background: linear-gradient(135deg, #E6E6FA, #DDA0DD); */
+    background: url('../../public/assets/nui2.png') center/100% 100% no-repeat !important;
 }
 .square.era3 .square-color-header { 
     background: linear-gradient(135deg, #9370DB, #8A2BE2);
 }
 
 .square.era4 { 
-    background: linear-gradient(135deg, #FFC0CB, #FFB6C1);
+    /* background: linear-gradient(135deg, #FFC0CB, #FFB6C1); */
+    background: url('../../public/assets/nui2.png') center/100% 100% no-repeat !important;
 }
 .square.era4 .square-color-header { 
     background: linear-gradient(135deg, #FF1493, #DC143C);
 }
 
 .square.era5 { 
-    background: linear-gradient(135deg, #F08080, #FA8072);
+    /* background: linear-gradient(135deg, #F08080, #FA8072); */
+    background: url('../../public/assets/nui2.png') center/100% 100% no-repeat !important;
 }
 .square.era5 .square-color-header { 
     background: linear-gradient(135deg, #CD5C5C, #B22222);
 }
 
 .square.era6 { 
-    background: linear-gradient(135deg, #FFD700, #FFA500);
+    /* background: linear-gradient(135deg, #FFD700, #FFA500); */
+    background: url('../../public/assets/nui2.png') center/100% 100% no-repeat !important;
 }
 .square.era6 .square-color-header { 
     background: linear-gradient(135deg, #FF8C00, #FF6347);
 }
 
 .square.era7 { 
-    background: linear-gradient(135deg, #90EE90, #98FB98);
+    /* background: linear-gradient(135deg, #90EE90, #98FB98); */
+    background: url('../../public/assets/nui2.png') center/100% 100% no-repeat !important;
 }
 .square.era7 .square-color-header { 
     background: linear-gradient(135deg, #32CD32, #228B22);
 }
 
 .square.era8 { 
-    background: linear-gradient(135deg, #87CEEB, #00CED1);
+    /* background: linear-gradient(135deg, #87CEEB, #00CED1); */
+    background: url('../../public/assets/nui2.png') center/100% 100% no-repeat !important;
 }
 .square.era8 .square-color-header { 
     background: linear-gradient(135deg, #008B8B, #006400);
@@ -156,8 +180,9 @@
 
 /* Special Squares */
 .square-river { 
-    background: linear-gradient(135deg, #4682B4, #2F4F4F);
+    /* background: linear-gradient(135deg, #4682B4, #2F4F4F); */
     color: white;
+    background: url('../../public/assets/song2.png') center/100% 100% no-repeat !important;
 }
 .square-river .square-name {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
@@ -170,16 +195,16 @@
 }
 
 .square-start { 
-    background: url('../../public/assets/lapquoc.png') center/100% 100% no-repeat !important;
+    background: url('../../public/assets/lapquoc2.png') center/100% 100% no-repeat !important;
 }
 .square-jail { 
-    background: url('../../public/assets/tu.png') center/100% 100% no-repeat !important;
+    background: url('../../public/assets/tu2.png') center/100% 100% no-repeat !important;
 }
 .square-festival { 
-    background: url('../../public/assets/lehoi.png') center/100% 100% no-repeat !important;
+    background: url('../../public/assets/lehoi2.png') center/100% 100% no-repeat !important;
 }
 .square-teleport { 
-    background: url('../../public/assets/nguao.png') center/100% 100% no-repeat !important;
+    background: url('../../public/assets/nguao2.png') center/100% 100% no-repeat !important;
 }
 
 .square-event, .square-tax { 
@@ -280,15 +305,15 @@
     }
     
     .square-name {
-        margin-top: 12px;
+        margin-top: 8px;
     }
     
     .square-color-header {
-        height: 14px;
+        height: 8px;
     }
     
     .building-container {
-        top: 16px;
+        top: 10px;
     }
 }
 
@@ -298,14 +323,14 @@
     }
     
     .square-name {
-        margin-top: 10px;
+        margin-top: 5px;
     }
     
     .square-color-header {
-        height: 12px;
+        height: 5px;
     }
     
     .building-container {
-        top: 14px;
+        top: 8px;
     }
 }

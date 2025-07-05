@@ -1,6 +1,5 @@
 // src/components/Board.js
 import React from 'react';
-// Dữ liệu board và gridPositions sẽ được lấy từ server trong gameState
 import { gridPositions } from '../logic/data';
 import '../styles/Board.css';
 
@@ -31,7 +30,7 @@ const Board = ({ board, players, onSquareClick, selectionMode }) => {
                         style={{ ...getPositionStyle(square.id), ...borderStyle }}
                         onClick={() => onSquareClick && onSquareClick(square.id)}
                     >
-                        <div className={`square-color-header ${square.colorGroup || ''}`}></div>
+                        <div className={`square-color-header ${square.colorGroup || ''} square-color-header-${square.header || ''}`}></div>
                         <div className="square-name">{square.name}</div>
                         {square.type === 'property' && <div className="square-price">{square.price.toLocaleString()} vàng</div>}
                         {square.buildings > 0 &&

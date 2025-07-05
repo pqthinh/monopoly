@@ -10,14 +10,14 @@ const boardData = [
     { id: 8, name: "Thành Cổ Loa", type: 'property', price: 120000, buildCost: 50000, rent: [8000, 40000, 100000, 300000, 450000], colorGroup: 'era2', buildings: 0 },
     
     { id: 9, name: "Ô Nhà Tù", type: 'jail', buildings: 0 },
-    { id: 10, name: "Chùa Bút Tháp", type: 'property', price: 140000, buildCost: 100000, rent: [10000, 50000, 150000, 450000, 625000], colorGroup: 'era3', buildings: 0 },
-    { id: 11, name: "Thành Đại La", type: 'property', price: 140000, buildCost: 100000, rent: [10000, 50000, 150000, 450000, 625000], colorGroup: 'era3', buildings: 0 },
-    { id: 12, name: "Tống Bình", type: 'property', price: 160000, buildCost: 100000, rent: [12000, 60000, 180000, 500000, 700000], colorGroup: 'era3', buildings: 0 },
+    { id: 10, name: "Chùa Bút Tháp", type: 'property', price: 140000, buildCost: 100000, rent: [10000, 50000, 150000, 450000, 625000], colorGroup: 'era3', buildings: 0, header: 2 },
+    { id: 11, name: "Thành Đại La", type: 'property', price: 140000, buildCost: 100000, rent: [10000, 50000, 150000, 450000, 625000], colorGroup: 'era3', buildings: 0, header: 2},
+    { id: 12, name: "Tống Bình", type: 'property', price: 160000, buildCost: 100000, rent: [12000, 60000, 180000, 500000, 700000], colorGroup: 'era3', buildings: 0, header: 2 },
     { id: 13, name: "Ô Sự Kiện", type: 'event', buildings: 0 },
-    { id: 14, name: "Chùa Dâu", type: 'property', price: 180000, buildCost: 100000, rent: [14000, 70000, 200000, 550000, 750000], colorGroup: 'era4', buildings: 0 },
+    { id: 14, name: "Chùa Dâu", type: 'property', price: 180000, buildCost: 100000, rent: [14000, 70000, 200000, 550000, 750000], colorGroup: 'era4', buildings: 0, header: 2 },
     { id: 15, name: "Sông Bạch Đằng", type: 'river', price: 200000, buildings: 0 },
-    { id: 16, name: "Luy Lâu", type: 'property', price: 180000, buildCost: 100000, rent: [14000, 70000, 200000, 550000, 750000], colorGroup: 'era4', buildings: 0 },
-    { id: 17, name: "Thuận Thành", type: 'property', price: 200000, buildCost: 100000, rent: [16000, 80000, 220000, 600000, 800000], colorGroup: 'era4', buildings: 0 },
+    { id: 16, name: "Luy Lâu", type: 'property', price: 180000, buildCost: 100000, rent: [14000, 70000, 200000, 550000, 750000], colorGroup: 'era4', buildings: 0, header: 2 },
+    { id: 17, name: "Thuận Thành", type: 'property', price: 200000, buildCost: 100000, rent: [16000, 80000, 220000, 600000, 800000], colorGroup: 'era4', buildings: 0, header: 2 },
     
     { id: 18, name: "Ô Lễ Hội", type: 'festival', buildings: 0 },
     { id: 19, name: "Bao Vinh", type: 'property', price: 220000, buildCost: 150000, rent: [18000, 90000, 250000, 700000, 875000], colorGroup: 'era5', buildings: 0 },
@@ -30,14 +30,14 @@ const boardData = [
     { id: 26, name: "Chùa Một Cột", type: 'property', price: 280000, buildCost: 150000, rent: [24000, 120000, 360000, 850000, 1025000], colorGroup: 'era6', buildings: 0 },
     
     { id: 27, name: "Ô Ngựa Ô", type: 'teleport', buildings: 0 },
-    { id: 28, name: "Chùa Thạch Long", type: 'property', price: 300000, buildCost: 200000, rent: [26000, 130000, 390000, 900000, 1100000], colorGroup: 'era7', buildings: 0 },
-    { id: 29, name: "Điện Biên Phủ", type: 'property', price: 300000, buildCost: 200000, rent: [26000, 130000, 390000, 900000, 1100000], colorGroup: 'era7', buildings: 0 },
+    { id: 28, name: "Chùa Thạch Long", type: 'property', price: 300000, buildCost: 200000, rent: [26000, 130000, 390000, 900000, 1100000], colorGroup: 'era7', buildings: 0, header: 4 },
+    { id: 29, name: "Điện Biên Phủ", type: 'property', price: 300000, buildCost: 200000, rent: [26000, 130000, 390000, 900000, 1100000], colorGroup: 'era7', buildings: 0, header: 4 },
     { id: 30, name: "Sông Bến Hải", type: 'river', price: 200000, buildings: 0 },
-    { id: 31, name: "Bản Mười Phăng", type: 'property', price: 320000, buildCost: 200000, rent: [28000, 150000, 450000, 1000000, 1200000], colorGroup: 'era7', buildings: 0 },
+    { id: 31, name: "Bản Mười Phăng", type: 'property', price: 320000, buildCost: 200000, rent: [28000, 150000, 450000, 1000000, 1200000], colorGroup: 'era7', buildings: 0, header: 4 },
     { id: 32, name: "Ô Thuế", type: 'tax', taxAmount: 200000, buildings: 0 },
-    { id: 33, name: "Phước Vĩnh An", type: 'property', price: 350000, buildCost: 200000, rent: [35000, 175000, 500000, 1100000, 1300000], colorGroup: 'era8', buildings: 0 },
-    { id: 34, name: "Địa đạo Củ Chi", type: 'property', price: 350000, buildCost: 200000, rent: [35000, 175000, 500000, 1100000, 1300000], colorGroup: 'era8', buildings: 0 },
-    { id: 35, name: "Chùa Hội Phước", type: 'property', price: 400000, buildCost: 200000, rent: [50000, 200000, 600000, 1400000, 1700000], colorGroup: 'era8', buildings: 0 },
+    { id: 33, name: "Phước Vĩnh An", type: 'property', price: 350000, buildCost: 200000, rent: [35000, 175000, 500000, 1100000, 1300000], colorGroup: 'era8', buildings: 0, header: 4 },
+    { id: 34, name: "Địa đạo Củ Chi", type: 'property', price: 350000, buildCost: 200000, rent: [35000, 175000, 500000, 1100000, 1300000], colorGroup: 'era8', buildings: 0, header: 4 },
+    { id: 35, name: "Chùa Hội Phước", type: 'property', price: 400000, buildCost: 200000, rent: [50000, 200000, 600000, 1400000, 1700000], colorGroup: 'era8', buildings: 0, header: 4 },
 ];
 
 const characterCards = [

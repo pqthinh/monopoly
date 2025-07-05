@@ -86,9 +86,9 @@ io.on('connection', (socket) => {
             
             const player = game.players.find(p => p.id === socket.id);
             if (game.players[game.currentPlayerIndex].id !== player.id) return;
-            console.log("game.players", game.players)
-            console.log("game.currentPlayerIndex", game.currentPlayerIndex)
-            console.log("player", player)
+            // console.log("game.players", game.players)
+            // console.log("game.currentPlayerIndex", game.currentPlayerIndex)
+            // console.log("player", player)
             // Truyền hành động đến Game Controller
             game.handleAction(socket.id, action);
             

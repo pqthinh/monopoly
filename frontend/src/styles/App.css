@@ -111,7 +111,7 @@ body {
 }
 
 /* Thêm vào cuối file */
-.lobby-container {
+/* .lobby-container {
     width: 100%;
     max-width: 600px;
     margin: 50px auto;
@@ -120,7 +120,7 @@ body {
     background-color: #f5e8d5;
     border: 3px solid #6b4a2f;
     border-radius: 10px;
-}
+} */
 
 .player-list {
     margin-top: 20px;

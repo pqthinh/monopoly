@@ -231,7 +231,8 @@ class Game {
         // Logic tính tiền độc quyền
         const ownedInGroup = this.board.filter(s => s.colorGroup === square.colorGroup && s.ownerId === owner.id);
         const isMonopoly = ownedInGroup.length === this.board.filter(s => s.colorGroup === square.colorGroup).length;
-        
+        console.log("calculateRent", square)
+        console.log("owner", owner)
         let rent = square.rent[square.buildings];
         if (isMonopoly && square.buildings === 0) {
             rent *= 2;
