@@ -7,7 +7,7 @@
     border: 5px solid #8c6a4d;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'TextFont', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .lobby-container h1, .lobby-container h2 {

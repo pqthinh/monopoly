@@ -1,16 +1,30 @@
+@font-face {
+  font-family: 'GameFont';
+  src: url('./game.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'LogoFont';
+  src: url('./logo.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'TextFont';
+  src: url('./text.otf') format('opentype');
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-      sans-serif;
+    font-family: 'TextFont' !important;
     background-color: #f0f2f5;
-    padding: 20px;
+    padding: 0px;
+    margin: 0px;
 }
 
 .app {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 20px;
+    gap: 0px;
 }
 
 .lobby {
@@ -19,7 +33,8 @@ body {
 }
 
 .right-panel {
-    padding: 20px;
+    font-family: 'TextFont' !important;
+    padding: 10px;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);

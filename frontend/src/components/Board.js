@@ -18,7 +18,7 @@ const Board = ({ board, players, onSquareClick, selectionMode }) => {
     return (
         <div className="board-container">
             <div className="center-logo">
-                <h1>Kỳ Sử Lạc Hồng</h1>
+                {/* <h1>Kỳ Sử Lạc Hồng</h1> */}
             </div>
             {board && board.map((square) => {
                 const borderStyle = square.ownerColor

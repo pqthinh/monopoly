@@ -1,19 +1,19 @@
 /* Board.css - Improved Monopoly Game Styling */
 
 .board-container {
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(10, 1fr);
-    width: 90vmin;
-    height: 90vmin;
-    max-width: 800px;
-    max-height: 800px;
-    margin: 20px auto;
-    border: 4px solid #8B4513;
-    background: linear-gradient(135deg, #f5e8d5, #e8d5c4);
-    position: relative;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
+  display: grid;
+  grid-template-columns: 1.6fr repeat(8, 1.1fr) 1.6fr;
+  grid-template-rows: repeat(10, 1fr);
+  width: 120vmin;
+  height: 98vmin;
+  max-width: 1200px;
+  max-height: 1200px;
+  margin: auto;
+  border: 4px solid #8B4513;
+  background: linear-gradient(135deg, #f5e8d5, #e8d5c4);
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
 }
 
 .center-logo {
@@ -21,13 +21,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(45deg, #e4cfa9, #d4bf94);
-    border: 3px solid #6b4a2f;
-    border-radius: 12px;
-    font-family: 'Georgia', 'Times New Roman', serif;
+    /* border: 3px solid #6b4a2f; */
+    border-radius: 2px;
+    font-family: 'LogoFont', 'Georgia', 'Times New Roman', serif;
     color: #6b4a2f;
     text-align: center;
     box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* background: url('../../public/assets/board2.png') center/contain no-repeat; */
+    background: url('../../public/assets/board2.png') center/100% 100% no-repeat;
+
 }
 
 .center-logo h1 {
@@ -38,6 +40,7 @@
 }
 
 .square {
+    font-family: 'TextFont';
     border: 2px solid #9d7f61;
     display: flex;
     flex-direction: column;
@@ -46,13 +49,14 @@
     font-size: clamp(0.6rem, 1.2vw, 0.8rem);
     font-weight: bold;
     color: #4b3621;
+    /* color: #6b4a2f; */
     position: relative;
     text-align: center;
     background-clip: padding-box;
     transition: all 0.3s ease;
     cursor: pointer;
     overflow: hidden;
-    border-radius: 4px;
+    /* border-radius: 2px; */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -89,7 +93,7 @@
     left: 0;
     width: 100%;
     height: 18px;
-    border-radius: 4px 4px 0 0;
+    /* border-radius: 4px 4px 0 0; */
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), transparent);
 }
 
@@ -160,14 +164,35 @@
 }
 
 .square-start, .square-jail, .square-festival, .square-teleport { 
-    background: linear-gradient(135deg, #c8a47e, #b8946e);
+    /* background: linear-gradient(135deg, #c8a47e, #b8946e); */
     border: 3px solid #8B4513;
     font-weight: bold;
 }
 
+.square-start { 
+    background: url('../../public/assets/lapquoc.png') center/100% 100% no-repeat !important;
+}
+.square-jail { 
+    background: url('../../public/assets/tu.png') center/100% 100% no-repeat !important;
+}
+.square-festival { 
+    background: url('../../public/assets/lehoi.png') center/100% 100% no-repeat !important;
+}
+.square-teleport { 
+    background: url('../../public/assets/nguao.png') center/100% 100% no-repeat !important;
+}
+
 .square-event, .square-tax { 
     background: linear-gradient(135deg, #a9a9a9, #999999);
-    color: white;
+    color: #4b3621;
+    font-family: 'LogoFont';
+}
+
+.square-event { 
+    background: url('../../public/assets/sukien.png') center/100% 100% no-repeat !important;
+}
+.square-tax { 
+    background: url('../../public/assets/thue.png') center/100% 100% no-repeat !important;
 }
 
 /* Player Tokens */
