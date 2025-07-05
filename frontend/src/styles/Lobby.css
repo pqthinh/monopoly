@@ -30,6 +30,7 @@
     margin: 0;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     animation: titleGlow 2s ease-in-out infinite alternate;
+    font-family: 'LogoFont';
 }
 
 @keyframes titleGlow {

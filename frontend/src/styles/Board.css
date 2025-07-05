@@ -132,7 +132,7 @@
 
 .square.era3 { 
     /* background: linear-gradient(135deg, #E6E6FA, #DDA0DD); */
-    background: url('../../public/assets/nui90.png') center/80% no-repeat !important;
+    background: url('../../public/assets/nui-90.png') center/100% no-repeat !important;
 }
 .square.era3 .square-color-header { 
     background: linear-gradient(135deg, #9370DB, #8A2BE2);
@@ -140,7 +140,7 @@
 
 .square.era4 { 
     /* background: linear-gradient(135deg, #FFC0CB, #FFB6C1); */
-    background: url('../../public/assets/nui90.png') center/80% no-repeat !important;
+    background: url('../../public/assets/nui-90.png') center/100% no-repeat !important;
 }
 .square.era4 .square-color-header { 
     background: linear-gradient(135deg, #FF1493, #DC143C);
@@ -164,7 +164,7 @@
 
 .square.era7 { 
     /* background: linear-gradient(135deg, #90EE90, #98FB98); */
-    background: url('../../public/assets/nui90.png') center/80% no-repeat !important;
+    background: url('../../public/assets/nui90.png') center/100% no-repeat !important;
 }
 .square.era7 .square-color-header { 
     background: linear-gradient(135deg, #32CD32, #228B22);
@@ -172,7 +172,7 @@
 
 .square.era8 { 
     /* background: linear-gradient(135deg, #87CEEB, #00CED1); */
-    background: url('../../public/assets/nui90.png') center/80% no-repeat !important;
+    background: url('../../public/assets/nui90.png') center/100% no-repeat !important;
 }
 .square.era8 .square-color-header { 
     background: linear-gradient(135deg, #008B8B, #006400);
