@@ -3,8 +3,7 @@ import React from 'react';
 import { gridPositions } from '../logic/data';
 import '../styles/Board.css';
 
-const Board = ({ board, players, onSquareClick, selectionMode }) => {
-
+const Board = ({ board, players, dice, lastEventCard, onSquareClick, selectionMode }) => {
     const getPositionStyle = (squareId) => {
         const position = gridPositions.find(p => p.id === squareId);
         if (position) {
@@ -18,17 +17,41 @@ const Board = ({ board, players, onSquareClick, selectionMode }) => {
         <div className="board-container">
             <div className="center-logo">
                 {/* <h1>Kỳ Sử Lạc Hồng</h1> */}
+                {/* Khu vực hiển thị xúc xắc */}
+                <div className="dice-display-area">
+                    <div className="dice-visual">{dice && dice[0] > 0 ? dice[0] : '?'}</div>
+                    <div className="dice-visual">{dice && dice[1] > 0 ? dice[1] : '?'}</div>
+                </div>
+
+                {/* Khu vực hiển thị thẻ sự kiện */}
+                <div className="event-card-display">
+                    {lastEventCard ? (
+                        <>
+                            <div className={`card-header ${lastEventCard.type.replace(/\s/g, '-').toLowerCase()}`}>
+                                {lastEventCard.type}
+                            </div>
+                            <div className="card-text">
+                                {lastEventCard.text}
+                            </div>
+                        </>
+                    ) : (
+                        <p>Khu vực thẻ Cơ Hội / Vận Mệnh</p>
+                    )}
+                </div>
             </div>
             {board && board.map((square) => {
                 const borderStyle = square.ownerColor
-                    ? { borderColor: square.ownerColor, borderWidth: 5 }
+                    ? { borderColor: square.ownerColor, borderWidth: '4px', borderStyle: 'solid' }
                     : {};
+
+                const isSelectable = selectionMode && (square.type === 'property' || square.type === 'river');
+
                 return (
                     <div
                         key={`square-${square.id}`}
-                        className={`square square-${square.type} ${square.colorGroup || ''}`}
+                        className={`square square-${square.type} ${square.colorGroup || ''} ${isSelectable ? 'selectable' : ''}`}
                         style={{ ...getPositionStyle(square.id), ...borderStyle }}
-                        onClick={() => onSquareClick && onSquareClick(square.id)}
+                        onClick={() => isSelectable && onSquareClick && onSquareClick(square.id)}
                     >
                         <div className={`square-color-header ${square.colorGroup || ''} square-color-header-${square.header || ''}`}></div>
                         <div className="square-name">{square.name}</div>

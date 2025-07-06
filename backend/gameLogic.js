@@ -30,6 +30,7 @@ class Game {
         this.opportunityDeck = this.shuffle([...opportunityCards]);
         this.destinyDeck = this.shuffle([...destinyCards]);
         this.characterDeck = this.shuffle([...characterCards]);
+        this.lastEventCard = null; // THÊM MỚI: Lưu thẻ sự kiện cuối cùng
         this.assignInitialCharacters();
         this.applyStartingCharacterEffects();
     }
@@ -50,11 +51,31 @@ class Game {
             currentPhase: this.currentPhase,
             dice: this.dice,
             message: this.message,
+            lastEventCard: this.lastEventCard, // THÊM MỚI: Gửi thông tin thẻ cho client
         };
     }
 
     getCurrentPlayer() {
         return this.players[this.currentPlayerIndex];
+    }
+    
+    drawEventCard() {
+        const player = this.getCurrentPlayer();
+        const isOpportunity = Math.random() < 0.5;
+        const deck = isOpportunity ? this.opportunityDeck : this.destinyDeck;
+        const cardType = isOpportunity ? 'Cơ Hội' : 'Vận Mệnh';
+        const card = deck.shift();
+        deck.push(card);
+
+        this.message = `${cardType}: ${card.text}`;
+        
+        // THÊM MỚI: Cập nhật thẻ sự kiện cuối cùng
+        this.lastEventCard = {
+            type: cardType,
+            text: card.text
+        };
+
+        this.applyCardEffect(player, card);
     }
 
     assignInitialCharacters() {
@@ -98,7 +119,7 @@ class Game {
                 this.useGetOutOfJailCard();
                 break;
             case 'useCharacterCard':
-                this.useCharacterCard(); // Lỗi xảy ra ở đây
+                this.useCharacterCard();
                 break;
             case 'teleportTo':
                 this.teleportPlayer(action.payload.squareId);
@@ -111,7 +132,6 @@ class Game {
         }
     }
 
-    // SỬA LỖI: Bổ sung hàm useCharacterCard còn thiếu
     useCharacterCard() {
         const player = this.getCurrentPlayer();
         if (!player.character || player.characterUsed) {
@@ -127,7 +147,6 @@ class Game {
 
         this.message = `${player.name} sử dụng kỹ năng của ${player.character.name}: ${player.character.description}`;
         
-        // Chỉ đánh dấu đã sử dụng cho các thẻ có thể kích hoạt
         let isActionable = true;
 
         switch (effect.type) {
@@ -137,8 +156,6 @@ class Game {
                 break;
             
             case 'free_build':
-                // Cần có phase mới để chọn ô xây dựng.
-                // Tạm thời, thưởng tiền để đơn giản hóa.
                 player.money += 50000;
                 this.message += `\nBạn nhận được 50,000 vàng để hỗ trợ xây dựng.`;
                 break;
@@ -155,7 +172,7 @@ class Game {
                 break;
 
             case 'destroy_building':
-                this.currentPhase = 'destroy_building_select'; // Cần frontend để xử lý phase này
+                this.currentPhase = 'destroy_building_select';
                 this.message += `\nHãy chọn một công trình của đối thủ để phá hủy.`;
                 break;
             
@@ -382,18 +399,6 @@ class Game {
             this.message = `${player.name} đã dùng thẻ Thoát giam cầm và được tự do.`;
             this.currentPhase = 'management';
         }
-    }
-    
-    drawEventCard() {
-        const player = this.getCurrentPlayer();
-        const isOpportunity = Math.random() < 0.5;
-        const deck = isOpportunity ? this.opportunityDeck : this.destinyDeck;
-        const cardType = isOpportunity ? 'Cơ Hội' : 'Vận Mệnh';
-        const card = deck.shift();
-        deck.push(card);
-
-        this.message = `${cardType}: ${card.text}`;
-        this.applyCardEffect(player, card);
     }
     
     applyCardEffect(player, card) {
