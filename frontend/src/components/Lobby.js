@@ -3,7 +3,7 @@ import { Users, Plus, Crown, Gamepad2, User, Wifi, Clock } from 'lucide-react';
 import '../styles/Lobby.css';
 
 const Lobby = ({ socket, myId }) => {
-    const [playerName, setPlayerName] = useState('');
+    const [name, setName] = useState('');
     const [roomName, setRoomName] = useState('');
     const [rooms, setRooms] = useState({});
     const [isConnected, setIsConnected] = useState(true);
@@ -17,7 +17,7 @@ const Lobby = ({ socket, myId }) => {
         socket.on('connect', () => setIsConnected(true));
         socket.on('disconnect', () => setIsConnected(false));
 
-        setPlayerName(`Hào kiệt #${Math.floor(Math.random() * 1000)}`);
+        setName(`Hào kiệt #${Math.floor(Math.random() * 1000)}`);
 
         return () => {
             socket.off('roomListUpdate');
@@ -27,10 +27,10 @@ const Lobby = ({ socket, myId }) => {
     }, [socket]);
 
     const handleSetName = () => {
-        socket.emit('setPlayerName', playerName);
+        socket.emit('setName', name);
         const notification = document.createElement('div');
         notification.className = 'name-notification';
-        notification.innerHTML = `✨ Tên của bạn đã được đặt là: <strong>${playerName}</strong>`;
+        notification.innerHTML = `✨ Tên của bạn đã được đặt là: <strong>${name}</strong>`;
         document.body.appendChild(notification);
         setTimeout(() => notification.remove(), 3000);
     };
@@ -41,7 +41,7 @@ const Lobby = ({ socket, myId }) => {
     };
 
     const handleJoinRoom = (roomId) => {
-        socket.emit('setPlayerName', playerName);
+        socket.emit('setName', name);
         socket.emit('joinRoom', roomId);
     };
 
@@ -67,8 +67,8 @@ const Lobby = ({ socket, myId }) => {
                             <div className="input-wrapper">
                                 <input
                                     type="text"
-                                    value={playerName}
-                                    onChange={(e) => setPlayerName(e.target.value)}
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
                                     placeholder="Nhập tên của bạn"
                                     className="input-field"
                                 />

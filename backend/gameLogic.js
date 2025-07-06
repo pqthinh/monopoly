@@ -22,7 +22,7 @@ class Player {
 class Game {
     constructor(playerSockets, gameTimeInSeconds) { // Thêm gameTimeInSeconds
         this.board = JSON.parse(JSON.stringify(boardData.map(square => ({ ...square, ownerId: null, ownerColor: null, buildings: 0, taxMultiplier: 1, isUpgraded: false }))));
-        this.players = playerSockets.map(socket => new Player(socket.id, socket.playerName));
+        this.players = playerSockets.map(socket => new Player(socket.id, socket.name));
         this.currentPlayerIndex = 0;
         this.currentPhase = 'rolling';
         this.dice = [0, 0];

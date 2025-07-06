@@ -33,8 +33,8 @@ io.on('connection', (socket) => {
     updateRoomList();
 
     // Lắng nghe sự kiện client đặt tên
-    socket.on('setPlayerName', (name) => {
-        socket.playerName = name || `Hào kiệt #${Math.floor(Math.random() * 1000)}`;
+    socket.on('setName', (name) => {
+        socket.name = name || `Hào kiệt #${Math.floor(Math.random() * 1000)}`;
     });
 
     // Lắng nghe sự kiện client tạo phòng mới
@@ -42,7 +42,7 @@ io.on('connection', (socket) => {
         const roomId = `room-${socket.id}`;
         rooms[roomId] = {
             id: roomId,
-            name: roomName || `Phòng của ${socket.playerName || 'người chơi'}`,
+            name: roomName || `Phòng của ${socket.name || 'người chơi'}`,
             players: [],
             game: null,
             hostId: socket.id,
@@ -72,8 +72,8 @@ io.on('connection', (socket) => {
 
         socket.join(roomId);
         socket.roomId = roomId;
-        room.players.push({ id: socket.id, name: socket.playerName || `Hào kiệt` });
-        console.log(`> ${socket.playerName} (${socket.id}) joined room "${room.name}"`);
+        room.players.push({ id: socket.id, name: socket.name || `Hào kiệt` });
+        console.log(`> ${socket.name} (${socket.id}) joined room "${room.name}"`);
 
         // Gửi thông báo cho tất cả người chơi trong phòng về người chơi mới
         io.to(roomId).emit('playerJoined', { roomId, players: room.players });

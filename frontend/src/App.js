@@ -1,5 +1,5 @@
 // src/App.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 import Lobby from './components/Lobby';
 import Board from './components/Board';
@@ -20,6 +20,7 @@ function App() {
     const [popupInfo, setPopupInfo] = useState(null);
     const [remainingTime, setRemainingTime] = useState(0);
     const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+    const audioRef = useRef(null);
 
     useEffect(() => {
         socket.on('connected', ({ id }) => {
@@ -47,7 +48,7 @@ function App() {
         };
 
         const handleGameReset = (data) => {
-            alert(data || data.message || 'Một người chơi đã thoát, trận đấu bị hủy.');
+            alert(data.message || data || 'Một người chơi đã thoát, trận đấu bị hủy.');
             setGameState(null);
             setIsInLobby(true);
         };
@@ -70,11 +71,24 @@ function App() {
         };
     }, []);
 
+    useEffect(() => {
+        if (isMusicPlaying) {
+            audioRef.current.play().catch(e => {
+                console.warn("Autoplay blocked:", e);
+            });
+        }
+    }, [isMusicPlaying]);
+
     const handlePlayerAction = (action) => {
         socket.emit('playerAction', action);
     };
     
     const toggleMusic = () => {
+        if (isMusicPlaying) {
+            audioRef.current.pause();
+        } else {
+            audioRef.current.play();
+        }
         setIsMusicPlaying(!isMusicPlaying);
     };
 
@@ -102,7 +116,7 @@ function App() {
                     {isMusicPlaying ? <VolumeX size={24} /> : <Music size={24} />}
                 </button>
             </div>
-            <audio src="/assets/background-music.mp3" loop autoPlay={isMusicPlaying}></audio>
+            <audio ref={audioRef} src="./assets/background-music.mp3" loop></audio>
             <Board
                 board={gameState.board}
                 players={gameState.players}
