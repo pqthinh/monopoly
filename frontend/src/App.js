@@ -116,7 +116,7 @@ function App() {
                     {isMusicPlaying ? <VolumeX size={24} /> : <Music size={24} />}
                 </button>
             </div>
-            <audio ref={audioRef} src="./assets/background-music.mp3" loop></audio>
+            <audio ref={audioRef} src="/background-music.mp3" loop></audio>
             <Board
                 board={gameState.board}
                 players={gameState.players}
