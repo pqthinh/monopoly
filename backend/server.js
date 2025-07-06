@@ -7,7 +7,8 @@ const Game = require('./gameLogic.js');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-    cors: { origin: "http://localhost:3000" }
+    cors: { origin: ["http://localhost:3000", "https://monopoly.lexispeak.com"] },
+    path: "/socket.io/"
 });
 
 let rooms = {};
