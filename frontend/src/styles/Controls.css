@@ -10,7 +10,8 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    gap: 15px; /* Khoảng cách giữa các phần tử con */
+    gap: 15px;
+    box-sizing: border-box;
 }
 
 .controls h3, .controls h4, .controls h5 {

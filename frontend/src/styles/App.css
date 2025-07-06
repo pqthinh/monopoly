@@ -15,14 +15,14 @@
 
 body {
     font-family: 'TextFont' !important;
-    background-color: #f0f2f5;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     padding: 0px;
     margin: 0px;
 }
 
 .app {
     display: flex;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     justify-content: center;
     gap: 0px;
 }
@@ -39,6 +39,9 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     width: 300px;
+    box-sizing: border-box;
+    height: 100vh;
+    overflow: scroll;
 }
 
 .player-info, .controls {
