@@ -4,7 +4,7 @@
   "description": "Backend for Ky Su Lac Hong game",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
