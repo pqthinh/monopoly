@@ -32,7 +32,7 @@ const Controls = ({ onPlayerAction, isMyTurn, phase, player, board }) => {
                         <h4>Lượt của bạn</h4>
                         {isBuyable && player.money >= currentSquare.price && (
                              <button className="control-button action-button" onClick={() => onPlayerAction({ type: 'buyProperty' })}>
-                                Mua Đất ({currentSquare.price.toLocaleString()} vàng)
+                                Mua Đất ({currentSquare.price.toLocaleString()}đ)
                             </button>
                         )}
                         <div className="property-management">
@@ -66,7 +66,7 @@ const Controls = ({ onPlayerAction, isMyTurn, phase, player, board }) => {
                     <div className="jail-controls">
                         <h4>Bạn đang ở trong tù!</h4>
                         <button className="control-button" onClick={() => onPlayerAction({ type: 'rollDice' })}>Thử gieo đôi</button>
-                        <button className="control-button" onClick={() => onPlayerAction({ type: 'payBail' })} disabled={player.money < 50000}>Trả 50,000 để ra tù</button>
+                        <button className="control-button" onClick={() => onPlayerAction({ type: 'payBail' })} disabled={player.money < 50000}>Trả 50,000để ra tù</button>
                         {player.getOutOfJailCards > 0 && 
                             <button className="control-button" onClick={() => onPlayerAction({ type: 'useJailCard' })}>Dùng thẻ ra tù</button>
                         }

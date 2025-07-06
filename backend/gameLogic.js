@@ -157,7 +157,7 @@ class Game {
             
             case 'free_build':
                 player.money += 50000;
-                this.message += `\nBạn nhận được 50,000 vàng để hỗ trợ xây dựng.`;
+                this.message += `\nBạn nhận được 50,000đ để hỗ trợ xây dựng.`;
                 break;
 
             case 'collect_tax_from_all':
@@ -236,7 +236,7 @@ class Game {
             const passGoBonus = (player.character && player.character.effect && player.character.effect.type === 'pass_go_bonus') ? player.character.effect.value : 0;
             const totalReceived = 200000 + passGoBonus;
             player.money += totalReceived;
-            this.message += `\nĐi qua ô LẬP QUỐC, ${player.name} nhận ${totalReceived} vàng.`;
+            this.message += `\nĐi qua ô LẬP QUỐC, ${player.name} nhận ${totalReceived} đ.`;
         }
 
         this.processLandingOnSquare();
@@ -268,7 +268,7 @@ class Game {
             case 'tax':
                 const taxAmount = square.price;
                 player.money -= taxAmount;
-                this.message += `\nBạn phải trả thuế cho quốc khố ${taxAmount} vàng.`;
+                this.message += `\nBạn phải trả thuế cho quốc khố ${taxAmount} đ.`;
                 this.checkPlayerForBankruptcy(player);
                 break;
             case 'ngua_o':
@@ -340,7 +340,7 @@ class Game {
 
         player.money -= rentAmount;
         owner.money += rentAmount;
-        this.message = `${player.name} đã trả ${rentAmount} vàng tiền thuê cho ${owner.name}.`;
+        this.message = `${player.name} đã trả ${rentAmount} đ tiền thuê cho ${owner.name}.`;
         this.checkPlayerForBankruptcy(player);
     }
     
@@ -362,7 +362,7 @@ class Game {
         } else {
             player.jailTurns++;
             if (player.jailTurns >= 3) {
-                this.message += " Đã ở tù 3 lượt. Bạn phải trả tiền phạt 50,000 để ra tù.";
+                this.message += " Đã ở tù 3 lượt. Bạn phải trả tiền phạt 50,000để ra tù.";
                 player.money -= 50000;
                 player.isInJail = false;
                 player.jailTurns = 0;
@@ -385,7 +385,7 @@ class Game {
             player.money -= 50000;
             player.isInJail = false;
             player.jailTurns = 0;
-            this.message = `${player.name} đã trả 50,000 vàng tiền phạt và được tự do.`;
+            this.message = `${player.name} đã trả 50,000đ tiền phạt và được tự do.`;
             this.currentPhase = 'management';
         }
     }

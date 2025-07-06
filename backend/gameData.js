@@ -42,8 +42,8 @@ const boardData = [
 
 const characterCards = [
     
-    { id: 'lac_long_quan', name: "Lạc Long Quân", description: "Bắt đầu với 2,500,000 vàng.", effect: { type: 'start_money', value: 500000 } },
-    { id: 'au_co', name: "Âu Cơ", description: "Khi đi qua ô LẬP QUỐC, nhận thêm 500,000 vàng.", effect: { type: 'pass_go_bonus', value: 500000 } },
+    { id: 'lac_long_quan', name: "Lạc Long Quân", description: "Bắt đầu với 2,500,000đ.", effect: { type: 'start_money', value: 500000 } },
+    { id: 'au_co', name: "Âu Cơ", description: "Khi đi qua ô LẬP QUỐC, nhận thêm 500,000đ.", effect: { type: 'pass_go_bonus', value: 500000 } },
     { id: 'ly_thuong_kiet', name: "Lý Thường Kiệt", description: "Giảm 10% chi phí xây dựng công trình.", effect: { type: 'build_discount', value: 0.1 } },
     { id: 'tran_hung_dao', name: "Trần Hưng Đạo", description: "Giảm 20% tiền thuê phải trả.", effect: { type: 'rent_discount', value: 0.2 } },
     { id: 'quang_trung', name: "Quang Trung", description: "Được miễn phí ra tù lần đầu.", effect: { type: 'free_jail_exit', value: 1 } },
@@ -65,9 +65,9 @@ const characterCards = [
 ];
 
 const opportunityCards = [
-    { text: "Quốc khố thặng dư. Nhận 200,000 vàng.", action: 'add_money', value: 200000 },
-    { text: "Được mùa, nông sản bội thu. Nhận 100,000 vàng.", action: 'add_money', value: 100000 },
-    { text: "Trúng thầu công trình quốc gia. Nhận 500,000 vàng.", action: 'add_money', value: 500000 },
+    { text: "Quốc khố thặng dư. Nhận 200,000đ.", action: 'add_money', value: 200000 },
+    { text: "Được mùa, nông sản bội thu. Nhận 100,000đ.", action: 'add_money', value: 100000 },
+    { text: "Trúng thầu công trình quốc gia. Nhận 500,000đ.", action: 'add_money', value: 500000 },
     { text: "Sửa chữa thành trì, chi 100000 cho mỗi công trình.", action: 'pay_per_building', value: 100000 },
     { text: "Thoát khỏi ngục tù. Giữ lá bài này.", action: 'get_out_of_jail_free' },
     { text: "Tiến đến ô LẬP QUỐC.", action: 'move_to', value: 0 },
@@ -78,10 +78,10 @@ const opportunityCards = [
 ];
 
 const destinyCards = [
-    { text: "Thiên tai, mất mùa. Mất 150,000 vàng.", action: 'remove_money', value: 150000 },
-    { text: "Bị giặc ngoại xâm quấy phá. Mất 100,000 vàng.", action: 'remove_money', value: 100000 },
+    { text: "Thiên tai, mất mùa. Mất 150,000đ.", action: 'remove_money', value: 150000 },
+    { text: "Bị giặc ngoại xâm quấy phá. Mất 100,000đ.", action: 'remove_money', value: 100000 },
     { text: "Đi thẳng vào tù, không đi qua ô Lập Quốc.", action: 'go_to_jail' },
-    { text: "Khao quân, mỗi người chơi khác nhận 50,000 vàng từ bạn.", action: 'pay_players', value: 50000 },
+    { text: "Khao quân, mỗi người chơi khác nhận 50,000đ từ bạn.", action: 'pay_players', value: 50000 },
     { text: "Nhận tiền mừng từ các lãnh chúa. Mỗi người chơi khác trả bạn 50,000.", action: 'collect_from_players', value: 50000 },
     { text: "Lùi lại 3 bước.", action: 'move_steps', value: -3 },
     { text: "Giặc ngoại xâm, phá hủy 1 công trình trên vùng đất đắt giá nhất của bạn.", action: 'destroy_building', value: 'most_expensive' },

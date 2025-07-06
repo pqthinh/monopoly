@@ -55,7 +55,7 @@ const Board = ({ board, players, dice, lastEventCard, onSquareClick, selectionMo
                     >
                         <div className={`square-color-header ${square.colorGroup || ''} square-color-header-${square.header || ''}`}></div>
                         <div className="square-name">{square.name}</div>
-                        {square.type === 'property' && <div className="square-price">{square.price.toLocaleString()} vàng</div>}
+                        {square.type === 'property' && <div className="square-price">{square.price.toLocaleString()}đ</div>}
                         {square.buildings > 0 &&
                             <div className="building-container">
                                 {[...Array(square.buildings)].map((_, i) => <div key={i} className="building-icon">🏠</div>)}
