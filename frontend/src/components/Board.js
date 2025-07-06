@@ -21,7 +21,7 @@ const Board = ({ board, players, onSquareClick, selectionMode }) => {
             </div>
             {board && board.map((square) => {
                 const borderStyle = square.ownerColor
-                    ? { borderColor: square.ownerColor }
+                    ? { borderColor: square.ownerColor, borderWidth: 5 }
                     : {};
                 return (
                     <div

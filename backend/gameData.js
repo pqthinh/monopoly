@@ -41,12 +41,27 @@ const boardData = [
 ];
 
 const characterCards = [
-    { id: 'lac_long_quan', name: "Lạc Long Quân", description: "Bắt đầu với 2,500,000 tiền thay vì 2,000,000." },
-    { id: 'au_co', name: "Âu Cơ", description: "Khi đi qua ô Bắt Đầu, nhận thêm 500,000 tiền." },
-    { id: 'ly_thuong_kiet', name: "Lý Thường Kiệt", description: "Giảm 10% chi phí xây dựng công trình." },
-    { id: 'tran_hung_dao', name: "Trần Hưng Đạo", description: "Trả tiền thuê đất cho người chơi khác được giảm 10%." },
-    { id: 'quang_trung', name: "Quang Trung", description: "Lần đầu vào tù được miễn phí." },
-    { id: 'le_loi', name: "Lê Lợi", description: "Nhận miễn phí 1 vùng đất Thời kỳ 1 đầu tiên bạn đặt chân đến." },
+    
+    { id: 'lac_long_quan', name: "Lạc Long Quân", description: "Bắt đầu với 2,500,000 vàng.", effect: { type: 'start_money', value: 500000 } },
+    { id: 'au_co', name: "Âu Cơ", description: "Khi đi qua ô LẬP QUỐC, nhận thêm 500,000 vàng.", effect: { type: 'pass_go_bonus', value: 500000 } },
+    { id: 'ly_thuong_kiet', name: "Lý Thường Kiệt", description: "Giảm 10% chi phí xây dựng công trình.", effect: { type: 'build_discount', value: 0.1 } },
+    { id: 'tran_hung_dao', name: "Trần Hưng Đạo", description: "Giảm 20% tiền thuê phải trả.", effect: { type: 'rent_discount', value: 0.2 } },
+    { id: 'quang_trung', name: "Quang Trung", description: "Được miễn phí ra tù lần đầu.", effect: { type: 'free_jail_exit', value: 1 } },
+    { id: 'le_loi', name: "Lê Lợi", description: "Nhận miễn phí 1 vùng đất Thời kỳ 1 đầu tiên bạn đặt chân đến.", effect: { type: 'free_property_era1' } },
+    { id: 'hai_ba_trung', name: 'Hai Bà Trưng', description: 'Gấp đôi tiền thuế nhận được trong 2 lượt.', effect: { type: 'double_tax', duration: 2 } },
+    { id: 'ly_nam_de', name: 'Lý Nam Đế', description: 'Được xây 1 công trình miễn phí trên một khu đất sở hữu.', effect: { type: 'free_build', value: 1 } },
+    { id: 'ngo_quyen', name: 'Ngô Quyền', description: 'Miễn nhiễm với thẻ Vận Mệnh "Giặc ngoại xâm" một lần.', effect: { type: 'immune_to_invasion' } },
+    { id: 'dinh_bo_linh', name: 'Đinh Bộ Lĩnh', description: 'Mua lại đất của người khác với giá gốc.', effect: { type: 'buyback_at_cost' } },
+    { id: 'le_hoan', name: 'Lê Hoàn', description: 'Di chuyển đến ô bất kỳ trên bản đồ.', effect: { type: 'teleport' } },
+    { id: 'ly_thai_to', name: 'Lý Thái Tổ', description: 'Khi mua đất ở "Thành Thăng Long", được giảm 50% giá.', effect: { type: 'discount_on_thang_long' } },
+    { id: 'tran_nhan_tong', name: 'Trần Nhân Tông', description: 'Bỏ qua lượt của một người chơi bất kỳ.', effect: { type: 'skip_turn' } },
+    { id: 'nguyen_trai', name: 'Nguyễn Trãi', description: 'Rút 2 thẻ Cơ Hội thay vì 1.', effect: { type: 'draw_opportunity', value: 2 } },
+    { id: 'le_thanh_tong', name: 'Lê Thánh Tông', description: 'Tăng 20% tiền thuế tại tất cả các vùng đất bạn sở hữu.', effect: { type: 'global_tax_increase', value: 0.2 } },
+    { id: 'nguyen_hue', name: 'Nguyễn Huệ', description: 'Tung xúc xắc 3 lần trong một lượt (di chuyển 3 lần).', effect: { type: 'triple_roll' } },
+    { id: 'gia_long', name: 'Gia Long', description: 'Buộc một người chơi bán lại một khu đất cho bạn với giá gốc.', effect: { type: 'force_sell' } },
+    { id: 'ho_chi_minh', name: 'Hồ Chí Minh', description: 'Tất cả người chơi khác phải nộp cho bạn 10% tài sản của họ.', effect: { type: 'collect_tax_from_all', value: 0.1 } },
+    { id: 'vo_nguyen_giap', name: 'Võ Nguyên Giáp', description: 'Phá hủy 1 công trình trên đất của đối thủ.', effect: { type: 'destroy_building' } },
+    { id: 'phan_boi_chau', name: 'Phan Bội Châu', description: 'Ngăn chặn một người chơi mua đất trong lượt của họ.', effect: { type: 'block_purchase' } }
 ];
 
 const opportunityCards = [
@@ -58,6 +73,8 @@ const opportunityCards = [
     { text: "Tiến đến ô LẬP QUỐC.", action: 'move_to', value: 0 },
     { text: "Tiến đến Thành Thăng Long.", action: 'move_to', value: 25 },
     { text: "Nộp phạt vì đi sai luật. Mất 50000 tiền.", action: 'remove_money', value: 50000 },
+    { text: "Miễn thuế 1 lần. Giữ lá bài này.", action: 'get_tax_free_card', value: 1 },
+    { text: "Rút thêm 1 thẻ Nhân vật lịch sử.", action: 'draw_character_card', value: 1 },
 ];
 
 const destinyCards = [
@@ -67,6 +84,8 @@ const destinyCards = [
     { text: "Khao quân, mỗi người chơi khác nhận 50,000 vàng từ bạn.", action: 'pay_players', value: 50000 },
     { text: "Nhận tiền mừng từ các lãnh chúa. Mỗi người chơi khác trả bạn 50,000.", action: 'collect_from_players', value: 50000 },
     { text: "Lùi lại 3 bước.", action: 'move_steps', value: -3 },
+    { text: "Giặc ngoại xâm, phá hủy 1 công trình trên vùng đất đắt giá nhất của bạn.", action: 'destroy_building', value: 'most_expensive' },
+    { text: "Nộp 10% tổng tài sản cho quốc khố.", action: 'pay_asset_tax', value: 0.1 },
 ];
 
 

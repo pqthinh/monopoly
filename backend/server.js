@@ -10,117 +10,120 @@ const io = new Server(server, {
     cors: { origin: "http://localhost:3000" }
 });
 
-let rooms = {}; // Đối tượng để quản lý tất cả các phòng
+let rooms = {}; // Đối tượng để quản lý tất cả các phòng đang hoạt động
 
-// Hàm gửi danh sách phòng cập nhật cho tất cả mọi người
+// Hàm gửi danh sách phòng được cập nhật cho tất cả client
 const updateRoomList = () => {
-    // Chỉ gửi thông tin cần thiết, không gửi toàn bộ đối tượng socket
-    const roomListForClient = Object.fromEntries(
-        Object.entries(rooms).map(([roomId, room]) => [
-            roomId,
-            {
-                id: room.id,
-                name: room.name,
-                players: room.players.map(p => ({ id: p.id, name: p.name })),
-                playerCount: room.players.length
-            }
-        ])
-    );
+    const roomListForClient = Object.values(rooms).map(room => ({
+        id: room.id,
+        name: room.name,
+        players: room.players.map(p => ({ id: p.id, name: p.name })),
+        playerCount: room.players.length,
+        gameStarted: !!room.game // Cho client biết game đã bắt đầu hay chưa
+    }));
     io.emit('roomListUpdate', roomListForClient);
 };
 
 io.on('connection', (socket) => {
     console.log(`User connected: ${socket.id}`);
     socket.emit('connected', { id: socket.id });
-    updateRoomList(); // Gửi danh sách phòng cho người mới kết nối
+    updateRoomList(); // Gửi danh sách phòng cho người dùng mới
 
-    // Đặt tên cho người chơi
+    // Gán tên cho người chơi khi họ kết nối
     socket.on('setPlayerName', (name) => {
         socket.playerName = name || `Hào kiệt #${Math.floor(Math.random() * 1000)}`;
     });
 
-    // Tạo một phòng mới
+    // Xử lý việc tạo phòng mới
     socket.on('createRoom', (roomName) => {
         const roomId = `room-${socket.id}`;
         rooms[roomId] = {
             id: roomId,
-            name: roomName || `Phòng của ${socket.playerName}`,
+            name: roomName || `Phòng của ${socket.playerName || socket.id}`,
             players: [],
-            game: null
+            game: null,
+            hostId: socket.id
         };
-        console.log(`Room created: ${rooms[roomId].name}`);
+        console.log(`Room created: ${rooms[roomId].name} by ${socket.id}`);
         updateRoomList();
+        // Tự động cho người tạo phòng tham gia phòng đó
+        socket.emit('roomCreated', roomId);
     });
 
-    // Tham gia một phòng
+    // Xử lý việc tham gia phòng
     socket.on('joinRoom', (roomId) => {
         const room = rooms[roomId];
-        if (!room || room.players.length >= 4) {
-            socket.emit('joinRoomError', 'Phòng không tồn tại hoặc đã đầy.');
+        if (!room) {
+            socket.emit('joinRoomError', 'Phòng không tồn tại.');
+            return;
+        }
+        if (room.players.length >= 4) {
+            socket.emit('joinRoomError', 'Phòng đã đầy.');
+            return;
+        }
+        if (room.game) {
+            socket.emit('joinRoomError', 'Trận đấu đã bắt đầu.');
             return;
         }
 
         socket.join(roomId);
+        socket.roomId = roomId; // Lưu lại roomId để dễ xử lý khi ngắt kết nối
         room.players.push({ id: socket.id, name: socket.playerName || `Hào kiệt` });
-        console.log(`${socket.id} joined room ${roomId}`);
+        console.log(`${socket.id} (${socket.playerName}) joined room ${roomId}`);
 
         // Thông báo cho mọi người trong phòng về người chơi mới
         io.to(roomId).emit('playerJoined', { roomId, players: room.players });
         updateRoomList();
 
-        // Nếu đủ 4 người, bắt đầu game
-        if (room.players.length === 4) {
+        // Bắt đầu game khi có đủ 2 người chơi trở lên (để dễ test)
+        // Thay đổi điều kiện này thành room.players.length === 4 nếu muốn đủ 4 người
+        if (room.players.length === 4 && !room.game) {
             console.log(`Game starting in room ${roomId}`);
             const playerSockets = room.players.map(p => ({ id: p.id, playerName: p.name }));
             room.game = new Game(playerSockets);
             io.to(roomId).emit('gameStarted', room.game.getGameState());
+            updateRoomList(); // Cập nhật trạng thái 'gameStarted' của phòng
         }
     });
     
-    // Xử lý hành động trong game
+    // Xử lý hành động của người chơi trong game
     socket.on('playerAction', (action) => {
-        const roomId = Array.from(socket.rooms)[1]; // Lấy roomId từ socket
+        const roomId = socket.roomId;
         const room = rooms[roomId];
+
+        // Chỉ xử lý hành động nếu phòng và game tồn tại
         if (room && room.game) {
-            const game = room.game;
+            // Việc kiểm tra có phải lượt của người chơi hay không sẽ do gameLogic.js đảm nhiệm
+            room.game.handleAction(socket.id, action);
             
-            const player = game.players.find(p => p.id === socket.id);
-            if (game.players[game.currentPlayerIndex].id !== player.id) return;
-            // console.log("game.players", game.players)
-            // console.log("game.currentPlayerIndex", game.currentPlayerIndex)
-            // console.log("player", player)
-            // Truyền hành động đến Game Controller
-            game.handleAction(socket.id, action);
-            
-            // Sau mỗi hành động, gửi trạng thái mới nhất cho tất cả client trong phòng
-            const roomId = Array.from(socket.rooms)[1];
-            io.to(roomId).emit('updateGameState', game.getGameState());
+            // Sau mỗi hành động, gửi trạng thái game mới nhất cho tất cả client trong phòng
+            io.to(roomId).emit('updateGameState', room.game.getGameState());
         }
     });
 
-    // Xử lý khi người chơi thoát
+    // Xử lý khi người chơi ngắt kết nối
     socket.on('disconnect', () => {
         console.log(`User disconnected: ${socket.id}`);
-        // Tìm và xóa người chơi khỏi tất cả các phòng
-        for (const roomId in rooms) {
-            const room = rooms[roomId];
-            const playerIndex = room.players.findIndex(p => p.id === socket.id);
+        const roomId = socket.roomId;
+        const room = rooms[roomId];
 
+        if (room) {
+            const playerIndex = room.players.findIndex(p => p.id === socket.id);
             if (playerIndex !== -1) {
                 room.players.splice(playerIndex, 1);
                 
-                // Nếu game đang diễn ra, hủy game và thông báo
+                // Nếu game đang diễn ra, hủy game và thông báo cho những người còn lại
                 if (room.game) {
-                    io.to(roomId).emit('gameReset', 'Một người chơi đã thoát, trận đấu bị hủy.');
-                    delete rooms[roomId]; // Hủy phòng
+                    io.to(roomId).emit('gameReset', { message: 'Một người chơi đã thoát, trận đấu bị hủy.' });
+                    // Xóa phòng sau khi game bị hủy
+                    delete rooms[roomId];
                 } else {
-                    // Nếu chưa bắt đầu, chỉ cần cập nhật danh sách người chơi trong phòng
-                     io.to(roomId).emit('playerLeft', { roomId, players: room.players });
+                    // Nếu game chưa bắt đầu, chỉ cần cập nhật danh sách người chơi
+                    io.to(roomId).emit('playerLeft', { roomId, players: room.players });
                 }
-                
-                break; // Thoát vòng lặp khi đã tìm thấy và xử lý
             }
         }
+        // Cập nhật lại danh sách phòng cho tất cả mọi người
         updateRoomList();
     });
 });

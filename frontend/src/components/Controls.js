@@ -1,67 +1,104 @@
 // src/components/Controls.js
 import React from 'react';
+import '../styles/Controls.css';
 
 const Controls = ({ onPlayerAction, isMyTurn, phase, player, board }) => {
+    // Nếu không phải lượt của người chơi, hiển thị thông báo chờ
     if (!isMyTurn) {
         return (
             <div className="controls">
-                <h3>Đang chờ lượt...</h3>
+                <h3>Đang chờ lượt người chơi khác...</h3>
             </div>
         );
     }
 
-    const renderManagementPhase = () => (
-        <div>
-            <h4>Quản lý tài sản</h4>
-            {player.properties.map(propId => {
-                const square = board.find(s => s.id === propId);
+    // Lấy thông tin về ô đất hiện tại người chơi đang đứng
+    const currentSquare = board.find(s => s.id === player.position);
+
+    // Hàm render các nút điều khiển chính dựa trên phase của game
+    const renderActions = () => {
+        switch (phase) {
+            case 'rolling':
                 return (
-                    <div key={propId} className="property-manage-row">
-                        <span>{square.name} (Xây: {square.buildCost?.toLocaleString()})</span>
-                        <button onClick={() => onPlayerAction({ type: 'build', payload: { squareId: propId } })}>
-                            Xây
+                    <button className="control-button roll-dice" onClick={() => onPlayerAction({ type: 'rollDice' })}>
+                        Gieo Xúc Xắc
+                    </button>
+                );
+
+            case 'management':
+                const isBuyable = currentSquare && (currentSquare.type === 'property' || currentSquare.type === 'river') && currentSquare.ownerId === null;
+                return (
+                    <div className="management-controls">
+                        <h4>Lượt của bạn</h4>
+                        {isBuyable && player.money >= currentSquare.price && (
+                             <button className="control-button action-button" onClick={() => onPlayerAction({ type: 'buyProperty' })}>
+                                Mua Đất ({currentSquare.price.toLocaleString()} vàng)
+                            </button>
+                        )}
+                        <div className="property-management">
+                            <h5>Quản lý tài sản</h5>
+                            {player.properties.length > 0 ? player.properties.map(propId => {
+                                const square = board.find(s => s.id === propId);
+                                if (!square || square.type !== 'property') return null;
+                                const canBuild = player.money >= square.buildCost && square.buildings < 5;
+                                return (
+                                    <div key={propId} className="property-manage-row">
+                                        <span>{square.name} ({square.buildings} nhà)</span>
+                                        <button 
+                                            className="build-button"
+                                            onClick={() => onPlayerAction({ type: 'build', payload: { squareId: propId } })}
+                                            disabled={!canBuild}
+                                        >
+                                            Xây ({square.buildCost?.toLocaleString()})
+                                        </button>
+                                    </div>
+                                );
+                            }) : <p>Bạn chưa sở hữu tài sản nào.</p>}
+                        </div>
+                        <button className="control-button end-turn-button" onClick={() => onPlayerAction({ type: 'endTurn' })}>
+                            Kết Thúc Lượt
                         </button>
                     </div>
                 );
-            })}
-            <hr/>
-            <button onClick={() => onPlayerAction({ type: 'rollDice' })}>Gieo Xúc Xắc</button>
-        </div>
-    );
 
-    const renderJailPhase = () => (
-        <div>
-            <h4>Bạn đang ở trong tù!</h4>
-            <button onClick={() => onPlayerAction({ type: 'rollDice' })}>Thử gieo đôi</button>
-            <button onClick={() => onPlayerAction({ type: 'payBail' })}>Trả 50,000 để ra tù</button>
-            {player.getOutOfJailCards > 0 && 
-                <button onClick={() => onPlayerAction({ type: 'useJailCard' })}>Dùng thẻ ra tù</button>
-            }
-        </div>
-    );
-    
-    const renderDecisionPhase = () => (
-        <div>
-            <button onClick={() => onPlayerAction({ type: 'buyProperty' })}>Mua Đất</button>
-            <button onClick={() => onPlayerAction({ type: 'endTurn' })}>Bỏ Qua</button>
-        </div>
-    );
+            case 'jail':
+                return (
+                    <div className="jail-controls">
+                        <h4>Bạn đang ở trong tù!</h4>
+                        <button className="control-button" onClick={() => onPlayerAction({ type: 'rollDice' })}>Thử gieo đôi</button>
+                        <button className="control-button" onClick={() => onPlayerAction({ type: 'payBail' })} disabled={player.money < 50000}>Trả 50,000 để ra tù</button>
+                        {player.getOutOfJailCards > 0 && 
+                            <button className="control-button" onClick={() => onPlayerAction({ type: 'useJailCard' })}>Dùng thẻ ra tù</button>
+                        }
+                    </div>
+                );
+            
+            case 'teleport':
+            case 'festival':
+                return <p className="info-message">Hãy chọn một ô trên bàn cờ để thực hiện hành động.</p>;
 
-    const renderRentPhase = () => (
-        <div>
-            <p>Bạn đã trả tiền thuê.</p>
-            <button onClick={() => onPlayerAction({ type: 'endTurn' })}>OK</button>
-        </div>
-    );
+            case 'game_over':
+                return <h4>Trận đấu đã kết thúc!</h4>;
+
+            default:
+                return (
+                    <button className="control-button end-turn-button" onClick={() => onPlayerAction({ type: 'endTurn' })}>
+                        Kết Thúc Lượt
+                    </button>
+                );
+        }
+    };
 
     return (
         <div className="controls">
-            {phase === 'management' && renderManagementPhase()}
-            {phase === 'jail' && renderJailPhase()}
-            {phase === 'decision' && renderDecisionPhase()}
-            {phase === 'rent' && renderRentPhase()}
-            {phase === 'event' && <button onClick={() => onPlayerAction({ type: 'endTurn' })}>OK</button>}
-            {/* Thêm các phase teleport, festival... */}
+            {/* Nút sử dụng thẻ nhân vật, hiển thị ở mọi phase nếu đủ điều kiện */}
+            {player.character && !player.characterUsed && (
+                 <button className="control-button character-card-button" onClick={() => onPlayerAction({ type: 'useCharacterCard' })}>
+                    Dùng thẻ: {player.character.name}
+                </button>
+            )}
+            <hr />
+            {renderActions()}
         </div>
     );
 };
