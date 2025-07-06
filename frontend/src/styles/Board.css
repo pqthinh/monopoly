@@ -696,3 +696,21 @@
         top: 8px;
     }
 }
+
+.game-timer-overlay {
+    position: absolute;
+    top: 50px;
+    left: 10px;
+    z-index: 10;
+}
+
+.game-timer-overlay  .timer {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'Courier New', Courier, monospace;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}

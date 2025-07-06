@@ -20,7 +20,7 @@ class Player {
 }
 
 class Game {
-    constructor(playerSockets) {
+    constructor(playerSockets, gameTimeInSeconds) { // Thêm gameTimeInSeconds
         this.board = JSON.parse(JSON.stringify(boardData.map(square => ({ ...square, ownerId: null, ownerColor: null, buildings: 0, taxMultiplier: 1, isUpgraded: false }))));
         this.players = playerSockets.map(socket => new Player(socket.id, socket.playerName));
         this.currentPlayerIndex = 0;
@@ -30,7 +30,12 @@ class Game {
         this.opportunityDeck = this.shuffle([...opportunityCards]);
         this.destinyDeck = this.shuffle([...destinyCards]);
         this.characterDeck = this.shuffle([...characterCards]);
-        this.lastEventCard = null; // THÊM MỚI: Lưu thẻ sự kiện cuối cùng
+        this.lastEventCard = null;
+
+        // --- LOGIC HẸN GIỜ ---
+        this.remainingTime = gameTimeInSeconds; // Khởi tạo thời gian còn lại
+        // ---------------------
+
         this.assignInitialCharacters();
         this.applyStartingCharacterEffects();
     }
@@ -51,10 +56,12 @@ class Game {
             currentPhase: this.currentPhase,
             dice: this.dice,
             message: this.message,
-            lastEventCard: this.lastEventCard, // THÊM MỚI: Gửi thông tin thẻ cho client
+            lastEventCard: this.lastEventCard,
+            remainingTime: this.remainingTime, // Gửi thời gian còn lại cho client
         };
     }
 
+    // --- CÁC HÀM CŨ GIỮ NGUYÊN ---
     getCurrentPlayer() {
         return this.players[this.currentPlayerIndex];
     }
@@ -69,7 +76,6 @@ class Game {
 
         this.message = `${cardType}: ${card.text}`;
         
-        // THÊM MỚI: Cập nhật thẻ sự kiện cuối cùng
         this.lastEventCard = {
             type: cardType,
             text: card.text
@@ -100,35 +106,16 @@ class Game {
         }
 
         switch (action.type) {
-            case 'rollDice':
-                this.rollDice();
-                break;
-            case 'buyProperty':
-                this.buyProperty();
-                break;
-            case 'build':
-                this.buildOnProperty(action.payload.squareId);
-                break;
-            case 'endTurn':
-                this.endTurn();
-                break;
-            case 'payBail':
-                this.payToGetOutOfJail();
-                break;
-            case 'useJailCard':
-                this.useGetOutOfJailCard();
-                break;
-            case 'useCharacterCard':
-                this.useCharacterCard();
-                break;
-            case 'teleportTo':
-                this.teleportPlayer(action.payload.squareId);
-                break;
-            case 'organizeFestival':
-                this.organizeFestival(action.payload.squareId);
-                break;
-            default:
-                break;
+            case 'rollDice': this.rollDice(); break;
+            case 'buyProperty': this.buyProperty(); break;
+            case 'build': this.buildOnProperty(action.payload.squareId); break;
+            case 'endTurn': this.endTurn(); break;
+            case 'payBail': this.payToGetOutOfJail(); break;
+            case 'useJailCard': this.useGetOutOfJailCard(); break;
+            case 'useCharacterCard': this.useCharacterCard(); break;
+            case 'teleportTo': this.teleportPlayer(action.payload.squareId); break;
+            case 'organizeFestival': this.organizeFestival(action.payload.squareId); break;
+            default: break;
         }
     }
 
@@ -154,12 +141,10 @@ class Game {
                 this.currentPhase = 'teleport';
                 this.message += "\nHãy chọn một ô trên bàn cờ để di chuyển đến.";
                 break;
-            
             case 'free_build':
                 player.money += 50000;
                 this.message += `\nBạn nhận được 50,000đ để hỗ trợ xây dựng.`;
                 break;
-
             case 'collect_tax_from_all':
                 this.players.forEach(p => {
                     if (p.id !== player.id && !p.isBankrupt) {
@@ -170,12 +155,10 @@ class Game {
                 });
                 this.message += `\n${player.name} thu thuế từ tất cả người chơi khác.`;
                 break;
-
             case 'destroy_building':
                 this.currentPhase = 'destroy_building_select';
                 this.message += `\nHãy chọn một công trình của đối thủ để phá hủy.`;
                 break;
-            
             default:
                 this.message += `\nKỹ năng này là kỹ năng bị động hoặc không thể kích hoạt ngay bây giờ.`;
                 isActionable = false;
@@ -199,16 +182,12 @@ class Game {
             return;
         }
 
-        if (isDouble) {
-            player.doublesCount++;
-        } else {
-            player.doublesCount = 0;
-        }
+        if (isDouble) player.doublesCount++;
+        else player.doublesCount = 0;
 
         if (player.doublesCount === 3) {
             this.message = `${player.name} gieo 3 lần đôi liên tiếp! Bị giam cầm.`;
             this.sendPlayerToJail(player);
-            this.endTurn();
             return;
         }
 
@@ -238,29 +217,20 @@ class Game {
             player.money += totalReceived;
             this.message += `\nĐi qua ô LẬP QUỐC, ${player.name} nhận ${totalReceived} đ.`;
         }
-
         this.processLandingOnSquare();
     }
 
     processLandingOnSquare() {
         const player = this.getCurrentPlayer();
         const square = this.board[player.position];
-
         switch (square.type) {
             case 'property':
             case 'river':
-                if (square.ownerId === null) {
-                    this.currentPhase = 'management';
-                } else if (square.ownerId !== player.id && !this.players.find(p => p.id === square.ownerId).isInJail) {
-                    this.payRent();
-                }
+                if (square.ownerId === null) { this.currentPhase = 'management'; }
+                else if (square.ownerId !== player.id && !this.players.find(p => p.id === square.ownerId).isInJail) { this.payRent(); }
                 break;
-            case 'event':
-                this.drawEventCard();
-                break;
-            case 'jail':
-                this.message += `\nChỉ là đi thăm nhà tù thôi!`;
-                break;
+            case 'event': this.drawEventCard(); break;
+            case 'jail': this.message += `\nChỉ là đi thăm nhà tù thôi!`; break;
             case 'go_to_jail':
                 this.message += `\nĐi thẳng vào tù! Không được nhận tiền khi đi qua ô LẬP QUỐC.`;
                 this.sendPlayerToJail(player);
@@ -279,17 +249,14 @@ class Game {
                 this.currentPhase = 'festival';
                 this.message += `\nBạn được chọn 1 vùng đất của mình để tổ chức lễ hội và tăng thuế ở vùng đó lên gấp đôi.`;
                 break;
-            default:
-                break;
+            default: break;
         }
     }
 
     buyProperty() {
         const player = this.getCurrentPlayer();
         const square = this.board[player.position];
-
         if (this.currentPhase !== 'management' || square.ownerId !== null) return;
-        
         if (player.money >= square.price) {
             player.money -= square.price;
             square.ownerId = player.id;
@@ -305,14 +272,10 @@ class Game {
     buildOnProperty(squareId) {
         const player = this.getCurrentPlayer();
         const square = this.board.find(sq => sq.id === squareId);
-        if (!square || square.ownerId !== player.id || player.money < square.buildCost || square.buildings >= 5) {
-            return;
-        }
-
+        if (!square || square.ownerId !== player.id || player.money < square.buildCost || square.buildings >= 5) return;
         player.money -= square.buildCost;
         square.buildings++;
         this.message = `${player.name} đã xây 1 công trình trên ${square.name}.`;
-
         if (square.buildings === 3 && !square.isUpgraded) {
             square.isUpgraded = true;
             let upgradedName = square.name;
@@ -327,9 +290,7 @@ class Game {
         const player = this.getCurrentPlayer();
         const square = this.board[player.position];
         const owner = this.players.find(p => p.id === square.ownerId);
-
         if (!owner) return;
-
         let rentAmount = 0;
         if (square.type === 'river') {
             const riversOwnedByOwner = owner.properties.filter(id => this.board[id].type === 'river').length;
@@ -337,7 +298,6 @@ class Game {
         } else {
             rentAmount = square.rent[square.buildings] * square.taxMultiplier;
         }
-
         player.money -= rentAmount;
         owner.money += rentAmount;
         this.message = `${player.name} đã trả ${rentAmount} đ tiền thuê cho ${owner.name}.`;
@@ -403,19 +363,13 @@ class Game {
     
     applyCardEffect(player, card) {
         switch (card.action) {
-            case 'get_money':
-                player.money += card.value;
-                break;
-            case 'pay_money':
-                player.money -= card.value;
-                break;
+            case 'get_money': player.money += card.value; break;
+            case 'pay_money': player.money -= card.value; break;
             case 'move_to':
                 player.position = card.value;
                 this.processLandingOnSquare();
                 break;
-            case 'get_out_of_jail_free':
-                player.getOutOfJailCards++;
-                break;
+            case 'get_out_of_jail_free': player.getOutOfJailCards++; break;
             case 'destroy_building':
                 const propertiesWithBuildings = player.properties.map(id => this.board[id]).filter(sq => sq && sq.type === 'property' && sq.buildings > 0);
                 if (propertiesWithBuildings.length > 0) {
@@ -454,18 +408,15 @@ class Game {
     
     endTurn() {
         if (this.currentPhase === 'game_over') return;
-        
         const activePlayers = this.players.filter(p => !p.isBankrupt);
         if (activePlayers.length <= 1) {
             this.endGame(activePlayers.length === 1 ? activePlayers[0] : null, "là người sống sót cuối cùng");
             return;
         }
-        
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.players.length;
         while(this.getCurrentPlayer().isBankrupt) {
              this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.players.length;
         }
-
         this.currentPhase = 'rolling';
         this.message = `Đến lượt của ${this.getCurrentPlayer().name}.`;
     }
@@ -473,10 +424,8 @@ class Game {
     checkPlayerForMonopoly(player, square) {
         const era = square.era;
         if (!era) return;
-
         const eraProperties = this.board.filter(s => s.era === era && s.type === 'property');
         const ownedEraProperties = eraProperties.filter(s => s.ownerId === player.id);
-
         if (eraProperties.length > 0 && eraProperties.length === ownedEraProperties.length) {
             this.message += `\n${player.name} đã độc quyền Thời kỳ ${era}!`;
             ownedEraProperties.forEach(prop => {
@@ -489,7 +438,6 @@ class Game {
     
     checkPlayerForWin(player) {
         if (!player || this.currentPhase === 'game_over') return;
-
         const eraCounts = player.properties.reduce((accumulator, propertyId) => {
             const property = this.board[propertyId];
             if (property && property.era) {
@@ -503,13 +451,11 @@ class Game {
                 return;
             }
         }
-
         const riversOwned = player.properties.filter(id => this.board[id] && this.board[id].type === 'river').length;
         if (riversOwned >= 4) {
             this.endGame(player, 'đã chiếm được cả 4 con sông lớn');
             return;
         }
-
         if (player.monopolyCount >= 3) {
             this.endGame(player, 'đã đạt được độc quyền 3 lần');
             return;
@@ -522,7 +468,6 @@ class Game {
                 const prop = this.board[propId];
                 return sum + (prop.price / 2) + (prop.buildings * prop.buildCost / 2);
             }, 0);
-
             if (player.money + totalAssetsValue < 0) {
                 player.isBankrupt = true;
                 this.message += `\n${player.name} đã phá sản!`;
@@ -545,7 +490,6 @@ class Game {
             }
         });
         bankruptPlayer.properties = [];
-
         const remainingPlayers = this.players.filter(p => !p.isBankrupt);
         if (remainingPlayers.length === 1) {
             this.endGame(remainingPlayers[0], "là người sống sót cuối cùng");
@@ -554,8 +498,46 @@ class Game {
         }
     }
 
-    endGame(winner, reason) {
+    // --- CÁC HÀM MỚI VÀ HÀM ĐƯỢC CHỈNH SỬA CHO LOGIC HẸN GIỜ ---
+
+    /**
+     * Hàm kết thúc game khi hết giờ.
+     * Tính tổng tài sản để tìm người chiến thắng.
+     */
+    endGameByTime() {
         if (this.currentPhase === 'game_over') return;
+
+        let winner = null;
+        let maxAssets = -Infinity;
+
+        this.players.forEach(player => {
+            if (!player.isBankrupt) {
+                // Tính tổng tài sản = tiền mặt + 50% giá trị đất + 50% giá trị nhà
+                const totalAssets = player.money + player.properties.reduce((sum, propId) => {
+                    const prop = this.board.find(p => p.id === propId);
+                    if (!prop) return sum;
+                    const propertyValue = prop.price || 0;
+                    const buildingValue = (prop.buildings || 0) * (prop.buildCost || 0);
+                    return sum + (propertyValue / 2) + (buildingValue / 2);
+                }, 0);
+                
+                if (totalAssets > maxAssets) {
+                    maxAssets = totalAssets;
+                    winner = player;
+                }
+            }
+        });
+        
+        this.endGame(winner, "hết giờ và có nhiều tài sản nhất");
+    }
+
+    /**
+     * Hàm chung để kết thúc ván đấu.
+     * @param {Player} winner - Người chơi chiến thắng.
+     * @param {string} reason - Lý do chiến thắng.
+     */
+    endGame(winner, reason) {
+        if (this.currentPhase === 'game_over') return; // Tránh kết thúc game nhiều lần
         this.currentPhase = 'game_over';
         if (winner) {
             this.message = `Trận đấu kết thúc! ${winner.name} đã chiến thắng vì ${reason}!`;

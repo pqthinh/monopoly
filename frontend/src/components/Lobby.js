@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Plus, Crown, Gamepad2, User, Wifi } from 'lucide-react';
-import '../styles/Lobby.css'
+import { Users, Plus, Crown, Gamepad2, User, Wifi, Clock } from 'lucide-react';
+import '../styles/Lobby.css';
 
 const Lobby = ({ socket, myId }) => {
     const [playerName, setPlayerName] = useState('');
     const [roomName, setRoomName] = useState('');
     const [rooms, setRooms] = useState({});
     const [isConnected, setIsConnected] = useState(true);
+    const [gameTime, setGameTime] = useState(600); // Mặc định 10 phút (600 giây)
 
     useEffect(() => {
         socket.on('roomListUpdate', (updatedRooms) => {
@@ -16,7 +17,6 @@ const Lobby = ({ socket, myId }) => {
         socket.on('connect', () => setIsConnected(true));
         socket.on('disconnect', () => setIsConnected(false));
 
-        // Đặt tên mặc định khi kết nối
         setPlayerName(`Hào kiệt #${Math.floor(Math.random() * 1000)}`);
 
         return () => {
@@ -28,7 +28,6 @@ const Lobby = ({ socket, myId }) => {
 
     const handleSetName = () => {
         socket.emit('setPlayerName', playerName);
-        // Hiển thị thông báo đẹp hơn
         const notification = document.createElement('div');
         notification.className = 'name-notification';
         notification.innerHTML = `✨ Tên của bạn đã được đặt là: <strong>${playerName}</strong>`;
@@ -37,12 +36,11 @@ const Lobby = ({ socket, myId }) => {
     };
 
     const handleCreateRoom = () => {
-        socket.emit('createRoom', roomName);
+        socket.emit('createRoom', { roomName, gameTime });
         setRoomName('');
     };
-    
+
     const handleJoinRoom = (roomId) => {
-        // Đặt tên trước khi vào phòng
         socket.emit('setPlayerName', playerName);
         socket.emit('joinRoom', roomId);
     };
@@ -102,6 +100,17 @@ const Lobby = ({ socket, myId }) => {
                                 Tạo Phòng
                             </button>
                         </div>
+                        <div className="input-group">
+                             <div className="input-wrapper">
+                                <label htmlFor="game-time-select" className="time-label"><Clock size={16} /> Thời gian chơi:</label>
+                                <select id="game-time-select" value={gameTime} onChange={(e) => setGameTime(Number(e.target.value))} className="input-field">
+                                    <option value={300}>5 phút</option>
+                                    <option value={600}>10 phút</option>
+                                    <option value={900}>15 phút</option>
+                                    <option value={1200}>20 phút</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -126,7 +135,7 @@ const Lobby = ({ socket, myId }) => {
                                         <Users size={16} />
                                         {room.playerCount} / 4
                                     </div>
-                                    <button 
+                                    <button
                                         onClick={() => handleJoinRoom(room.id)}
                                         disabled={room.playerCount >= 4}
                                         className="join-button"
