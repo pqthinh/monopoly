@@ -1,21 +1,68 @@
-// src/components/PlayerInfo.js
 import React from 'react';
+import '../styles/PlayerInfo.css'; // File CSS riêng cho component này
 
-const PlayerInfo = ({ players, myId }) => {
+// Hàm để lấy màu sắc tương ứng với người chơi
+const getPlayerColor = (characterName) => {
+    const colors = {
+        'Lạc Long Quân': '#4a90e2',
+        'Âu Cơ': '#f5a623',
+        'Thánh Gióng': '#50e3c2',
+        'Sơn Tinh': '#bd10e0',
+    };
+    return colors[characterName] || '#777';
+};
+
+function PlayerInfo({ player, isMyTurn, isMe }) {
+    // Xác định các lớp CSS động
+    const playerInfoClasses = [
+        'player-info',
+        isMyTurn ? 'active-turn' : '',
+        isMe ? 'my-info' : ''
+    ].join(' ');
+
+    const playerColor = getPlayerColor(player.character?.name);
+
     return (
-        <div className="player-info">
-            <h2>Thông tin người chơi</h2>
-            {players.map((player, index) => (
-                // SỬA LỖI: Sử dụng kết hợp player.id và index để đảm bảo key là duy nhất
-                <div key={player.id || `player-${index}`} className={player.id === myId ? 'my-info' : ''}>
-                    <p style={{ color: player.color, fontWeight: 'bold' }}>
-                        {player.name||player.name||`Người chơi ${index}`}: {(player.money || 0).toLocaleString()}đ
-                    </p>
-                    {player.character && <p>Nhân vật: {player.character.name}</p>}
+        <div className={playerInfoClasses} style={{ '--player-color': playerColor }}>
+            <div className="player-header">
+                <img 
+                    src={player.character?.avatar || '/path/to/default/avatar.png'} 
+                    alt={player.character?.name} 
+                    className="player-avatar"
+                />
+                <div className="player-details">
+                    <h3 className="player-name">{player.name}</h3>
+                    <p className="player-character">{player.character?.name || 'Chưa chọn nhân vật'}</p>
                 </div>
-            ))}
+            </div>
+            
+            <div className="player-stats">
+                <div className="stat-item money">
+                    <span className="stat-icon">💰</span>
+                    <span>{player.money.toLocaleString('vi-VN')}</span>
+                </div>
+                {player.inJail && (
+                    <div className="stat-item status-jail">
+                        <span className="stat-icon">⛓️</span>
+                        <span>Đang bị giam (còn {player.jailTurns} lượt)</span>
+                    </div>
+                )}
+            </div>
+
+            <div className="player-properties">
+                <h4>Tài sản</h4>
+                {player.properties && player.properties.length > 0 ? (
+                    <div className="property-list">
+                        {player.properties.map(propId => (
+                            <div key={propId} className="property-dot" title={`Mảnh đất ${propId}`}></div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="no-properties">Chưa có tài sản</p>
+                )}
+            </div>
         </div>
     );
-};
+}
 
 export default PlayerInfo;

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Plus, Crown, Gamepad2, User, Wifi, Clock } from 'lucide-react';
-
+import { useNavigate } from 'react-router-dom';
 import '../styles/Lobby.css';
 
 const Lobby = ({ socket, myId }) => {
+    const navigate = useNavigate();
     const [name, setName] = useState('');
     const [roomName, setRoomName] = useState('');
     const [rooms, setRooms] = useState({});
@@ -44,6 +45,7 @@ const Lobby = ({ socket, myId }) => {
     const handleJoinRoom = (roomId) => {
         socket.emit('setName', name);
         socket.emit('joinRoom', roomId);
+        navigate(`/game/${roomId}`);
     };
 
     return (

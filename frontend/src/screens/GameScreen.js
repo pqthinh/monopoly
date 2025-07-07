@@ -24,6 +24,9 @@ function GameScreen({ socket }) {
         socket.on('connected', ({ id }) => {
             setMyId(id);
         });
+        const handleGameStarted = (initialState) => {
+            setGameState(initialState);
+        };
 
         // Cập nhật trạng thái game
         socket.on('updateGameState', (newState) => {
@@ -65,11 +68,13 @@ function GameScreen({ socket }) {
         // Yêu cầu trạng thái game hiện tại khi vừa vào phòng
         // (Phòng trường hợp re-connect hoặc vào xem)
         socket.emit('requestGameState', roomId);
+        socket.on('gameStarted', handleGameStarted);
 
 
         // Cleanup listeners khi component unmount
         return () => {
             socket.off('connected');
+            socket.off('gameStarted', handleGameStarted);
             socket.off('updateGameState');
             socket.off('gameReset');
             socket.off('timeUpdate');

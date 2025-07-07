@@ -1,4 +1,5 @@
 const { boardData, characterCards, opportunityCards, destinyCards } = require('./gameData');
+const GameLog = require('./models/GameLog');
 
 class Player {
     constructor(id, name) {
