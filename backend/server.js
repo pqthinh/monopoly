@@ -3,6 +3,11 @@ const http = require('http');
 const express = require('express');
 const { Server } = require("socket.io");
 const Game = require('./gameLogic.js');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const cors = require('cors');
+
+dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
@@ -10,6 +15,15 @@ const io = new Server(server, {
     cors: { origin: ["http://localhost:3000", "https://monopoly.lexispeak.com"] },
     path: "/socket.io/"
 });
+app.use(cors());
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('MongoDB Connected'))
+    .catch(err => console.log(err));
+
+// Routes
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/games', require('./routes/game'));
+app.use('/api/analysis', require('./routes/analysis'));
 
 let rooms = {};
 

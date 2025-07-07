@@ -1,159 +1,66 @@
-// src/App.js
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
+import axios from 'axios';
+
+// Components
 import Lobby from './components/Lobby';
-import Board from './components/Board';
-import PlayerInfo from './components/PlayerInfo';
-import Controls from './components/Controls';
-import Popup from './components/Popup';
-import DecisionPopup from './components/DecisionPopup';
-import { Music, VolumeX } from 'lucide-react';
+import GameScreen from './screens/GameScreen'; // We will create this wrapper
+import AuthScreen from './screens/AuthScreen'; // And this one
+import HistoryScreen from './screens/HistoryScreen';
+import AnalysisScreen from './screens/AnalysisScreen';
+import PrivateRoute from './components/PrivateRoute';
+
 import './styles/App.css';
 
-const socket = io('https://monopoly.lexispeak.com/');
+// Configure axios
+axios.defaults.baseURL = 'http://localhost:4000'; // Your backend URL
+const setAuthToken = token => {
+    if (token) {
+        axios.defaults.headers.common['x-auth-token'] = token;
+    } else {
+        delete axios.defaults.headers.common['x-auth-token'];
+    }
+};
+
+const socket = io('http://localhost:4000');
 
 function App() {
-    const [gameState, setGameState] = useState(null);
-    const [myId, setMyId] = useState('');
-    const [isInLobby, setIsInLobby] = useState(true);
-    const [showDecisionPopup, setShowDecisionPopup] = useState(false);
-    const [popupInfo, setPopupInfo] = useState(null);
-    const [remainingTime, setRemainingTime] = useState(0);
-    const [isMusicPlaying, setIsMusicPlaying] = useState(false);
-    const audioRef = useRef(null);
+    const [token, setToken] = useState(localStorage.getItem('token'));
+    const navigate = useNavigate();
 
     useEffect(() => {
-        socket.on('connected', ({ id }) => {
-            setMyId(id);
-        });
-
-        const handleGameStarted = (initialState) => {
-            setGameState(initialState);
-            setRemainingTime(initialState.remainingTime);
-            setIsInLobby(false);
-        };
-
-        const handleUpdateState = (newState) => {
-            setGameState(newState);
-            if (['teleport', 'festival'].includes(newState.currentPhase)) {
-                setShowDecisionPopup(true);
-                setPopupInfo({
-                    phase: newState.currentPhase,
-                    options: newState.board,
-                    player: newState.players.find(p => p.id === newState.currentPlayerId)
-                });
-            } else {
-                setShowDecisionPopup(false);
-            }
-        };
-
-        const handleGameReset = (data) => {
-            alert(data.message || data || 'Một người chơi đã thoát, trận đấu bị hủy.');
-            setGameState(null);
-            setIsInLobby(true);
-        };
-
-        const handleTimeUpdate = ({ remainingTime }) => {
-            setRemainingTime(remainingTime);
-        };
-        
-        socket.on('gameStarted', handleGameStarted);
-        socket.on('updateGameState', handleUpdateState);
-        socket.on('gameReset', handleGameReset);
-        socket.on('timeUpdate', handleTimeUpdate);
-
-        return () => {
-            socket.off('connected');
-            socket.off('gameStarted', handleGameStarted);
-            socket.off('updateGameState', handleUpdateState);
-            socket.off('gameReset', handleGameReset);
-            socket.off('timeUpdate', handleTimeUpdate);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (isMusicPlaying) {
-            audioRef.current.play().catch(e => {
-                console.warn("Autoplay blocked:", e);
-            });
+        if (token) {
+            localStorage.setItem('token', token);
+            setAuthToken(token);
+        } else {
+            localStorage.removeItem('token');
+            setAuthToken(null);
         }
-    }, [isMusicPlaying]);
+    }, [token]);
 
-    const handlePlayerAction = (action) => {
-        socket.emit('playerAction', action);
+    const handleSetToken = (newToken) => {
+        setToken(newToken);
+        navigate('/'); // Navigate to lobby after login/register
     };
     
-    const toggleMusic = () => {
-        if (isMusicPlaying) {
-            audioRef.current.pause();
-        } else {
-            audioRef.current.play();
-        }
-        setIsMusicPlaying(!isMusicPlaying);
-    };
-
-    if (isInLobby) {
-        return <Lobby socket={socket} myId={myId} />;
+    const handleLogout = () => {
+        setToken(null);
+        navigate('/auth');
     }
-
-    if (!gameState || !gameState.players || !myId) {
-        return <div>Đang tải dữ liệu trận đấu...</div>;
-    }
-
-    const me = gameState.players.find(p => p.id === myId);
-
-    if (!me) {
-        console.error("Lỗi đồng bộ: Không tìm thấy ID người chơi trong trạng thái game.", { myId: myId, players: gameState.players.map(p => p.id) });
-        return <div>Lỗi: Không tìm thấy thông tin người chơi trong trận đấu. Vui lòng tải lại trang.</div>;
-    }
-
-    const isMyTurn = gameState.currentPlayerId === myId;
 
     return (
-        <div className="app">
-            <div className="game-info-overlay">
-                <button onClick={toggleMusic} className="music-toggle">
-                    {isMusicPlaying ? <VolumeX size={24} /> : <Music size={24} />}
-                </button>
-            </div>
-            <audio ref={audioRef} src="/background-music.mp3" loop></audio>
-            <Board
-                board={gameState.board}
-                players={gameState.players}
-                dice={gameState.dice}
-                lastEventCard={gameState.lastEventCard}
-                onSquareClick={(squareId) => {
-                    if (isMyTurn && gameState.currentPhase === 'teleport') {
-                        handlePlayerAction({ type: 'teleportTo', payload: { squareId } });
-                    }
-                    if (isMyTurn && gameState.currentPhase === 'festival') {
-                        handlePlayerAction({ type: 'organizeFestival', payload: { squareId } });
-                    }
-                }}
-                selectionMode={isMyTurn && (gameState.currentPhase === 'teleport' || gameState.currentPhase === 'festival')}
-                remainingTime={remainingTime}
-            />
-            <div className="right-panel">
-                <PlayerInfo players={gameState.players} myId={myId} />
-                <Controls
-                    onPlayerAction={handlePlayerAction}
-                    isMyTurn={isMyTurn}
-                    phase={gameState.currentPhase}
-                    player={me}
-                    board={gameState.board}
-                />
-                <Popup message={gameState.message} />
-            </div>
-            {showDecisionPopup && isMyTurn && (
-                <DecisionPopup
-                    info={popupInfo}
-                    onDecision={(decision) => {
-                        handlePlayerAction(decision);
-                        setShowDecisionPopup(false);
-                    }}
-                    onClose={() => setShowDecisionPopup(false)}
-                />
-            )}
+        <div className="App">
+            {token && <button onClick={handleLogout} style={{ position: 'absolute', top: 10, right: 10 }}>Đăng xuất</button>}
+            <Routes>
+                <Route path="/auth" element={<AuthScreen setToken={handleSetToken} />} />
+                
+                {/* Private Routes */}
+                <Route path="/" element={<PrivateRoute token={token}><Lobby socket={socket} /></PrivateRoute>} />
+                <Route path="/game/:roomId" element={<PrivateRoute token={token}><GameScreen socket={socket} /></PrivateRoute>} />
+                <Route path="/history" element={<PrivateRoute token={token}><HistoryScreen /></PrivateRoute>} />
+                <Route path="/analysis/:gameId" element={<PrivateRoute token={token}><AnalysisScreen /></PrivateRoute>} />
+            </Routes>
         </div>
     );
 }

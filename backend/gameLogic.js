@@ -26,18 +26,23 @@ class Game {
         this.currentPlayerIndex = 0;
         this.currentPhase = 'rolling';
         this.dice = [0, 0];
-        this.message = 'Trận đấu bắt đầu! Chúc người chơi may mắn.';
+        this.addLog('Trận đấu bắt đầu! Chúc người chơi may mắn.');
         this.opportunityDeck = this.shuffle([...opportunityCards]);
         this.destinyDeck = this.shuffle([...destinyCards]);
         this.characterDeck = this.shuffle([...characterCards]);
         this.lastEventCard = null;
-
+        this.logs = [];
         // --- LOGIC HẸN GIỜ ---
         this.remainingTime = gameTimeInSeconds; // Khởi tạo thời gian còn lại
         // ---------------------
 
         this.assignInitialCharacters();
         this.applyStartingCharacterEffects();
+    }
+
+    addLog(message) {
+        this.logs.push(message);
+        this.addLog(message);
     }
 
     shuffle(deck) {
@@ -74,7 +79,7 @@ class Game {
         const card = deck.shift();
         deck.push(card);
 
-        this.message = `${cardType}: ${card.text}`;
+        this.addLog(`${cardType}: ${card.text}`);
         
         this.lastEventCard = {
             type: cardType,
@@ -122,28 +127,28 @@ class Game {
     useCharacterCard() {
         const player = this.getCurrentPlayer();
         if (!player.character || player.characterUsed) {
-            this.message = "Bạn không có thẻ nhân vật hoặc đã sử dụng rồi.";
+            this.addLog("Bạn không có thẻ nhân vật hoặc đã sử dụng rồi.");
             return;
         }
 
         const effect = player.character.effect;
         if (!effect) {
-            this.message = "Thẻ nhân vật này không có hiệu ứng.";
+            this.addLog("Thẻ nhân vật này không có hiệu ứng.");
             return;
         }
 
-        this.message = `${player.name} sử dụng kỹ năng của ${player.character.name}: ${player.character.description}`;
+        this.addLog(`${player.name} sử dụng kỹ năng của ${player.character.name}: ${player.character.description}`);
         
         let isActionable = true;
 
         switch (effect.type) {
             case 'teleport':
                 this.currentPhase = 'teleport';
-                this.message += "\nHãy chọn một ô trên bàn cờ để di chuyển đến.";
+                this.addLog(`\nHãy chọn một ô trên bàn cờ để di chuyển đến.`);
                 break;
             case 'free_build':
                 player.money += 50000;
-                this.message += `\nBạn nhận được 50,000đ để hỗ trợ xây dựng.`;
+                this.addLog(`\nBạn nhận được 50,000đ để hỗ trợ xây dựng.`);
                 break;
             case 'collect_tax_from_all':
                 this.players.forEach(p => {
@@ -153,14 +158,14 @@ class Game {
                         player.money += tax;
                     }
                 });
-                this.message += `\n${player.name} thu thuế từ tất cả người chơi khác.`;
+                this.addLog(`\n${player.name} thu thuế từ tất cả người chơi khác.`);
                 break;
             case 'destroy_building':
                 this.currentPhase = 'destroy_building_select';
-                this.message += `\nHãy chọn một công trình của đối thủ để phá hủy.`;
+                this.addLog(`\nHãy chọn một công trình của đối thủ để phá hủy.`);
                 break;
             default:
-                this.message += `\nKỹ năng này là kỹ năng bị động hoặc không thể kích hoạt ngay bây giờ.`;
+                this.addLog(`\nKỹ năng này là kỹ năng bị động hoặc không thể kích hoạt ngay bây giờ.`);
                 isActionable = false;
                 break;
         }
@@ -186,7 +191,7 @@ class Game {
         else player.doublesCount = 0;
 
         if (player.doublesCount === 3) {
-            this.message = `${player.name} gieo 3 lần đôi liên tiếp! Bị giam cầm.`;
+            this.addLog(`${player.name} gieo 3 lần đôi liên tiếp! Bị giam cầm.`);
             this.sendPlayerToJail(player);
             return;
         }
@@ -195,7 +200,7 @@ class Game {
 
         if (this.currentPhase !== 'game_over') {
              if (isDouble) {
-                this.message += `\n${player.name} gieo được đôi, được tung xúc xắc một lần nữa!`;
+                this.addLog(`\n${player.name} gieo được đôi, được tung xúc xắc một lần nữa!`);
                 this.currentPhase = 'rolling';
             } else {
                 if(this.currentPhase === 'rolling') {
@@ -209,13 +214,13 @@ class Game {
         const player = this.getCurrentPlayer();
         const oldPosition = player.position;
         player.position = (player.position + steps) % this.board.length;
-        this.message = `${player.name} di chuyển ${steps} bước đến ô ${this.board[player.position].name}.`;
+        this.addLog(`${player.name} di chuyển ${steps} bước đến ô ${this.board[player.position].name}.`);
 
         if (player.position < oldPosition && !player.isBankrupt) {
             const passGoBonus = (player.character && player.character.effect && player.character.effect.type === 'pass_go_bonus') ? player.character.effect.value : 0;
             const totalReceived = 200000 + passGoBonus;
             player.money += totalReceived;
-            this.message += `\nĐi qua ô LẬP QUỐC, ${player.name} nhận ${totalReceived} đ.`;
+            this.addLog(`\nĐi qua ô LẬP QUỐC, ${player.name} nhận ${totalReceived} đ.`);
         }
         this.processLandingOnSquare();
     }
@@ -230,24 +235,24 @@ class Game {
                 else if (square.ownerId !== player.id && !this.players.find(p => p.id === square.ownerId).isInJail) { this.payRent(); }
                 break;
             case 'event': this.drawEventCard(); break;
-            case 'jail': this.message += `\nChỉ là đi thăm nhà tù thôi!`; break;
+            case 'jail': this.addLog(`\nChỉ là đi thăm nhà tù thôi!`); break;
             case 'go_to_jail':
-                this.message += `\nĐi thẳng vào tù! Không được nhận tiền khi đi qua ô LẬP QUỐC.`;
+                this.addLog(`\nĐi thẳng vào tù! Không được nhận tiền khi đi qua ô LẬP QUỐC.`);
                 this.sendPlayerToJail(player);
                 break;
             case 'tax':
                 const taxAmount = square.price;
                 player.money -= taxAmount;
-                this.message += `\nBạn phải trả thuế cho quốc khố ${taxAmount} đ.`;
+                this.addLog(`\nBạn phải trả thuế cho quốc khố ${taxAmount} đ.`);
                 this.checkPlayerForBankruptcy(player);
                 break;
             case 'ngua_o':
                 this.currentPhase = 'teleport';
-                this.message += `\nBạn được chọn nhảy vào ô bất kỳ trên bàn cờ.`;
+                this.addLog(`\nBạn được chọn nhảy vào ô bất kỳ trên bàn cờ.`);
                 break;
             case 'le_hoi':
                 this.currentPhase = 'festival';
-                this.message += `\nBạn được chọn 1 vùng đất của mình để tổ chức lễ hội và tăng thuế ở vùng đó lên gấp đôi.`;
+                this.addLog(`\nBạn được chọn 1 vùng đất của mình để tổ chức lễ hội và tăng thuế ở vùng đó lên gấp đôi.`);
                 break;
             default: break;
         }
@@ -262,10 +267,10 @@ class Game {
             square.ownerId = player.id;
             square.ownerColor = player.color;
             player.properties.push(square.id);
-            this.message = `${player.name} đã mua thành công ${square.name}.`;
+            this.addLog(`${player.name} đã mua thành công ${square.name}.`);
             this.checkPlayerForMonopoly(player, square);
         } else {
-            this.message = `Không đủ tiền để mua ${square.name}.`;
+            this.addLog(`Không đủ tiền để mua ${square.name}.`);
         }
     }
 
@@ -275,14 +280,14 @@ class Game {
         if (!square || square.ownerId !== player.id || player.money < square.buildCost || square.buildings >= 5) return;
         player.money -= square.buildCost;
         square.buildings++;
-        this.message = `${player.name} đã xây 1 công trình trên ${square.name}.`;
+        this.addLog(`${player.name} đã xây 1 công trình trên ${square.name}.`);
         if (square.buildings === 3 && !square.isUpgraded) {
             square.isUpgraded = true;
             let upgradedName = square.name;
             if (square.name.includes('Đền')) upgradedName = 'Chùa';
             else if (square.name.includes('Thành')) upgradedName = 'Khu quân sự';
             else if (square.name.includes('Nhà')) upgradedName = 'Làng';
-            this.message += `\nCông trình trên ${square.name} đã được nâng cấp thành ${upgradedName}! Bất động sản này giờ đây không thể bị người khác mua lại.`;
+            this.addLog(`\nCông trình trên ${square.name} đã được nâng cấp thành ${upgradedName}! Bất động sản này giờ đây không thể bị người khác mua lại.`);
         }
     }
 
@@ -300,7 +305,7 @@ class Game {
         }
         player.money -= rentAmount;
         owner.money += rentAmount;
-        this.message = `${player.name} đã trả ${rentAmount} đ tiền thuê cho ${owner.name}.`;
+        this.addLog(`${player.name} đã trả ${rentAmount} đ tiền thuê cho ${owner.name}.`);
         this.checkPlayerForBankruptcy(player);
     }
     
@@ -313,16 +318,16 @@ class Game {
     }
 
     handleJailRoll(player, isDouble) {
-        this.message = `${player.name} đang ở trong tù và gieo được ${this.dice[0]}-${this.dice[1]}.`;
+        this.addLog(`${player.name} đang ở trong tù và gieo được ${this.dice[0]}-${this.dice[1]}.`);
         if (isDouble) {
             player.isInJail = false;
             player.jailTurns = 0;
-            this.message += " Thật may mắn! Gieo được đôi, bạn đã được tự do!";
+            this.addLog("Thật may mắn! Gieo được đôi, bạn đã được tự do!");
             this.currentPhase = 'management';
         } else {
             player.jailTurns++;
             if (player.jailTurns >= 3) {
-                this.message += " Đã ở tù 3 lượt. Bạn phải trả tiền phạt 50,000để ra tù.";
+                this.addLog("Đã ở tù 3 lượt. Bạn phải trả tiền phạt 50,000để ra tù.");
                 player.money -= 50000;
                 player.isInJail = false;
                 player.jailTurns = 0;
@@ -333,7 +338,7 @@ class Game {
                     this.endTurn();
                 }
             } else {
-                this.message += ` Còn ${3 - player.jailTurns} lượt trong tù.`;
+                this.addLog(` Còn ${3 - player.jailTurns} lượt trong tù.`);
                 this.endTurn();
             }
         }
@@ -345,7 +350,7 @@ class Game {
             player.money -= 50000;
             player.isInJail = false;
             player.jailTurns = 0;
-            this.message = `${player.name} đã trả 50,000đ tiền phạt và được tự do.`;
+            this.addLog(`${player.name} đã trả 50,000đ tiền phạt và được tự do.`);
             this.currentPhase = 'management';
         }
     }
@@ -356,7 +361,7 @@ class Game {
             player.getOutOfJailCards--;
             player.isInJail = false;
             player.jailTurns = 0;
-            this.message = `${player.name} đã dùng thẻ Thoát giam cầm và được tự do.`;
+            this.addLog(`${player.name} đã dùng thẻ Thoát giam cầm và được tự do.`);
             this.currentPhase = 'management';
         }
     }
@@ -376,9 +381,9 @@ class Game {
                     propertiesWithBuildings.sort((a, b) => b.price - a.price);
                     const targetSquare = propertiesWithBuildings[0];
                     targetSquare.buildings--;
-                    this.message += `\nMột công trình trên ${targetSquare.name} đã bị phá hủy!`;
+                    this.addLog(`\nMột công trình trên ${targetSquare.name} đã bị phá hủy!`);
                 } else {
-                    this.message += `\nMay mắn! Bạn không có công trình nào để bị phá hủy.`;
+                    this.addLog(`\nMay mắn! Bạn không có công trình nào để bị phá hủy.`);
                 }
                 break;
         }
@@ -389,7 +394,7 @@ class Game {
         if (this.currentPhase !== 'teleport') return;
         const player = this.getCurrentPlayer();
         player.position = squareId;
-        this.message = `${player.name} đã dịch chuyển đến ${this.board[squareId].name}.`;
+        this.addLog(`${player.name} đã dịch chuyển đến ${this.board[squareId].name}.`);
         this.processLandingOnSquare();
         if(this.currentPhase === 'teleport') {
             this.currentPhase = 'management';
@@ -401,7 +406,7 @@ class Game {
         const square = this.board.find(sq => sq.id === squareId);
         if (square && square.ownerId === this.getCurrentPlayer().id) {
             square.taxMultiplier = 2;
-            this.message = `Lễ hội được tổ chức tại ${square.name}, tiền thuê tại đây tăng gấp đôi.`;
+            this.addLog(`Lễ hội được tổ chức tại ${square.name}, tiền thuê tại đây tăng gấp đôi.`);
             this.currentPhase = 'management';
         }
     }
@@ -418,7 +423,7 @@ class Game {
              this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.players.length;
         }
         this.currentPhase = 'rolling';
-        this.message = `Đến lượt của ${this.getCurrentPlayer().name}.`;
+        this.addLog(`Đến lượt của ${this.getCurrentPlayer().name}.`);
     }
 
     checkPlayerForMonopoly(player, square) {
@@ -427,7 +432,7 @@ class Game {
         const eraProperties = this.board.filter(s => s.era === era && s.type === 'property');
         const ownedEraProperties = eraProperties.filter(s => s.ownerId === player.id);
         if (eraProperties.length > 0 && eraProperties.length === ownedEraProperties.length) {
-            this.message += `\n${player.name} đã độc quyền Thời kỳ ${era}!`;
+            this.addLog(`\n${player.name} đã độc quyền Thời kỳ ${era}!`);
             ownedEraProperties.forEach(prop => {
                 prop.taxMultiplier = 2;
             });
@@ -470,10 +475,10 @@ class Game {
             }, 0);
             if (player.money + totalAssetsValue < 0) {
                 player.isBankrupt = true;
-                this.message += `\n${player.name} đã phá sản!`;
+                this.addLog(`\n${player.name} đã phá sản!`);
                 this.handlePlayerBankruptcy(player);
             } else {
-                this.message += `\n${player.name} không đủ tiền trả! Bạn cần bán tài sản để tiếp tục.`;
+                this.addLog(`\n${player.name} không đủ tiền trả! Bạn cần bán tài sản để tiếp tục.`);
             }
         }
     }
@@ -536,13 +541,32 @@ class Game {
      * @param {Player} winner - Người chơi chiến thắng.
      * @param {string} reason - Lý do chiến thắng.
      */
-    endGame(winner, reason) {
-        if (this.currentPhase === 'game_over') return; // Tránh kết thúc game nhiều lần
+    async endGame(winner, reason) {
+        if (this.currentPhase === 'game_over') return;
         this.currentPhase = 'game_over';
         if (winner) {
-            this.message = `Trận đấu kết thúc! ${winner.name} đã chiến thắng vì ${reason}!`;
+            this.addLog(`Trận đấu kết thúc! ${winner.name} đã chiến thắng vì ${reason}!`);
         } else {
-            this.message = `Trận đấu kết thúc vì ${reason}.`;
+            this.addLog(`Trận đấu kết thúc vì ${reason}.`);
+        }
+
+        // Save the game log to the database
+        const gameLog = new GameLog({
+            players: this.players.map(p => ({
+                userId: p.id, // This should be the MongoDB user ID if you have user accounts
+                username: p.name,
+                character: p.character ? p.character.name : 'N/A'
+            })),
+            winner: winner ? { userId: winner.id, username: winner.name } : null,
+            duration: this.gameTime - this.remainingTime,
+            logs: this.logs
+        });
+
+        try {
+            await gameLog.save();
+            console.log('Game log saved.');
+        } catch (err) {
+            console.error('Error saving game log:', err);
         }
     }
 }
