@@ -22,7 +22,7 @@ const Register = ({ setToken }) => {
     };
 
     return (
-        <form onSubmit={onSubmit}>
+        <form className="auth-form" onSubmit={onSubmit}>
             <input type="text" name="username" value={username} onChange={onChange} required />
             <input type="password" name="password" value={password} onChange={onChange} required />
             <button type="submit">Register</button>

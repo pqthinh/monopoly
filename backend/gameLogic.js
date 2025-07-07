@@ -41,8 +41,13 @@ class Game {
     }
 
     addLog(message) {
-        this.logs.push(message);
-        this.addLog(message);
+        try{
+            if (!this.logs) this.logs = []
+            console.log("Log: ", message)
+            this.logs.push(message);
+            this.message = message;
+        } catch(e){
+        }
     }
 
     shuffle(deck) {
@@ -63,6 +68,7 @@ class Game {
             message: this.message,
             lastEventCard: this.lastEventCard,
             remainingTime: this.remainingTime, // Gửi thời gian còn lại cho client
+            logs: this.logs
         };
     }
 

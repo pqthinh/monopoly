@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 // Components
 import Lobby from './components/Lobby';
@@ -12,6 +13,7 @@ import AnalysisScreen from './screens/AnalysisScreen';
 import PrivateRoute from './components/PrivateRoute';
 
 import './styles/App.css';
+import './styles/Screens.css'
 
 // Configure axios
 axios.defaults.baseURL = 'http://localhost:4000'; // Your backend URL
@@ -51,6 +53,7 @@ function App() {
 
     return (
         <div className="App">
+            {token && <Link to="/history"><button>Xem lịch sử đấu</button></Link>}
             {token && <button onClick={handleLogout} style={{ position: 'absolute', top: 10, right: 10 }}>Đăng xuất</button>}
             <Routes>
                 <Route path="/auth" element={<AuthScreen setToken={handleSetToken} />} />

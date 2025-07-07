@@ -40,22 +40,27 @@ function AnalysisScreen() {
     if (!game) return <p>Không tìm thấy trận đấu.</p>;
 
     return (
-        <div>
-            <h1>Chi tiết trận đấu</h1>
-            <Link to="/history">Quay lại lịch sử</Link>
-            <div>
-                <h3>Log trận đấu</h3>
-                <pre>{game.logs.join('\n')}</pre>
-            </div>
-            <button onClick={handleAnalyze} disabled={analyzing}>
-                {analyzing ? 'Đang phân tích...' : 'Phân tích bằng AI ✨'}
-            </button>
-            {analysis && (
-                <div>
-                    <h3>Phân tích từ AI</h3>
-                    <p>{analysis}</p>
+        <div className="screen-container">
+            <h1>Chi tiết & Phân tích trận đấu</h1>
+            <Link to="/history" className="link-button" style={{marginBottom: '20px', display: 'inline-block'}}>Quay lại lịch sử</Link>
+            
+            <div className="analysis-content">
+                <div className="analysis-section">
+                    <h3>Log trận đấu</h3>
+                    <div className="game-log">{game.logs.join('\n')}</div>
                 </div>
-            )}
+
+                <button onClick={handleAnalyze} disabled={analyzing}>
+                    {analyzing ? 'Đang phân tích...' : 'Phân tích bằng AI ✨'}
+                </button>
+
+                {analysis && (
+                    <div className="analysis-section">
+                        <h3>Phân tích từ AI</h3>
+                        <p className="analysis-result">{analysis}</p>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

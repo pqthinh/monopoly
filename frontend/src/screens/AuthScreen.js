@@ -6,16 +6,24 @@ function AuthScreen({ setToken }) {
     const [showLogin, setShowLogin] = useState(true);
 
     return (
-        <div>
+        <div className="screen-container auth-container">
             {showLogin ? (
                 <>
+                    <h2>Đăng nhập</h2>
                     <Login setToken={setToken} />
-                    <p>Chưa có tài khoản? <button onClick={() => setShowLogin(false)}>Đăng ký</button></p>
+                    <p className="auth-toggle">
+                        Chưa có tài khoản? 
+                        <button onClick={() => setShowLogin(false)}>Đăng ký</button>
+                    </p>
                 </>
             ) : (
                 <>
+                    <h2>Đăng ký</h2>
                     <Register setToken={setToken} />
-                    <p>Đã có tài khoản? <button onClick={() => setShowLogin(true)}>Đăng nhập</button></p>
+                    <p className="auth-toggle">
+                        Đã có tài khoản? 
+                        <button onClick={() => setShowLogin(true)}>Đăng nhập</button>
+                    </p>
                 </>
             )}
         </div>

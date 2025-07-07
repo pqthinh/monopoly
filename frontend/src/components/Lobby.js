@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Plus, Crown, Gamepad2, User, Wifi, Clock } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 import '../styles/Lobby.css';
 
@@ -57,9 +56,6 @@ const Lobby = ({ socket, myId }) => {
                         <Wifi size={16} />
                         {isConnected ? 'Đã kết nối' : 'Mất kết nối'}
                     </div>
-                </div>
-                <div className="lobby-actions">
-                    <Link to="/history"><button>Xem lịch sử đấu</button></Link>
                 </div>
 
                 <div className="player-setup">
