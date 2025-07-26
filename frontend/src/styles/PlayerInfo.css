@@ -1,0 +1,45 @@
+.player-info-container {
+    width: 100%;
+}
+
+.player-info-container h2 {
+    text-align: center;
+    border-bottom: 2px solid white;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-family: 'game', sans-serif;
+}
+
+.player-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-left: 5px solid var(--player-color);
+    transition: all 0.3s ease;
+}
+
+.player-card.active {
+    box-shadow: 0 0 15px gold, 0 0 5px var(--player-color);
+    border-color: gold;
+    transform: scale(1.02);
+}
+
+.player-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.player-properties {
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+.player-properties small {
+    display: block;
+    margin-top: 5px;
+    word-wrap: break-word;
+    color: #ccc;
+}

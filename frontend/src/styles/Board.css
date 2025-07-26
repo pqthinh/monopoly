@@ -1,11 +1,9 @@
-/* Board.css - Improved Monopoly Game Styling */
-
 .board-container {
   display: grid;
   grid-template-columns: 1.6fr repeat(8, 1.1fr) 1.6fr;
   grid-template-rows: 1.6fr repeat(8, 1.1fr) 1.6fr;
-  width: 120vmin;
-  height: 98vmin;
+  width: 96%;
+  height: 100%;
   max-width: 1200px;
   max-height: 1200px;
   margin: auto;
