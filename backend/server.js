@@ -44,6 +44,7 @@ io.on('connection', (socket) => {
             hostId: socket.id,
             gameTime: gameTime || 600,
             timerInterval: null,
+            turnTimer: null,
         };
         console.log(`Room created: "${rooms[roomId].name}" by ${socket.id} with time: ${rooms[roomId].gameTime}s`);
         updateRoomList();
@@ -79,9 +80,18 @@ io.on('connection', (socket) => {
             io.to(roomId).emit('gameStarted', room.game.getGameState());
             updateRoomList();
 
+            // Timer cho game
             room.timerInterval = setInterval(() => {
                 if (room.game.remainingTime > 0) {
                     room.game.remainingTime--;
+                    
+                    // Cập nhật timer lượt
+                    if (room.game.turnTimeRemaining > 0) {
+                        room.game.turnTimeRemaining--;
+                    } else {
+                        room.game.handleTurnTimeout();
+                    }
+                    
                     io.to(roomId).emit('timeUpdate', room.game.getGameState());
                 } else {
                     room.game.endGameByTime();
@@ -98,8 +108,8 @@ io.on('connection', (socket) => {
             room.game.handleAction(socket.id, action);
             io.to(socket.roomId).emit('updateGameState', room.game.getGameState());
 
-            if (room.game.currentPhase === 'game_over' && room.timerInterval) {
-                 clearInterval(room.timerInterval);
+            if (room.game.currentPhase === 'game_over') {
+                if (room.timerInterval) clearInterval(room.timerInterval);
             }
         }
     });

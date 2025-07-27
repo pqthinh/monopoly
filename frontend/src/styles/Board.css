@@ -631,14 +631,36 @@
 }
 
 .building-icon {
-    font-size: clamp(10px, 2vw, 14px);
-    filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3));
-    animation: buildingBounce 3s infinite;
+    font-size: 1.2em;
+    margin: 2px;
+    filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.3));
+    animation: upgrade 0.5s ease-out;
 }
 
-@keyframes buildingBounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-2px); }
+.building-icon.chua {
+    color: #FFD700;
+}
+
+.building-icon.khu-quan-su {
+    color: #8B0000;
+}
+
+.building-icon.lang {
+    color: #006400;
+}
+
+/* Animation khi nâng cấp */
+@keyframes upgrade {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.building-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
 }
 
 /* Corner Squares - Special Styling */

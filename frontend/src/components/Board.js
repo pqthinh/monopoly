@@ -19,6 +19,15 @@ const Board = ({ board, players, dice, lastEventCard, onSquareClick, selectionMo
         return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     };
 
+    const getBuildingIcon = (buildingType) => {
+        switch (buildingType) {
+            case 'Chùa': return '⛪';
+            case 'Khu quân sự': return '🏰';
+            case 'Làng': return '🏘️';
+            default: return '🏠';
+        }
+    };
+
     return (
         <><div className="game-timer-overlay">
             <div className="timer">
@@ -66,7 +75,15 @@ const Board = ({ board, players, dice, lastEventCard, onSquareClick, selectionMo
                             {square.type === 'property' && <div className="square-price">{square.price.toLocaleString()}đ</div>}
                             {square.buildings > 0 &&
                                 <div className="building-container">
-                                    {[...Array(square.buildings)].map((_, i) => <div key={i} className="building-icon">🏠</div>)}
+                                    {[...Array(square.buildings)].map((_, i) => (
+                                        <div
+                                            key={i}
+                                            className={`building-icon ${square.buildingType?.toLowerCase().replace(' ', '-')}`}
+                                            title={square.buildingType || 'Nhà'}
+                                        >
+                                            {getBuildingIcon(square.buildingType)}
+                                        </div>
+                                    ))}
                                 </div>
                             }
                             <div className="player-tokens-container">
