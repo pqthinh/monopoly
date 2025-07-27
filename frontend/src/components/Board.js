@@ -1,9 +1,8 @@
-// src/components/Board.js
 import React from 'react';
 import { gridPositions } from '../logic/data';
 import '../styles/Board.css';
 
-const Board = ({ board, players, dice, lastEventCard, onSquareClick, selectionMode, remainingTime }) => {
+const Board = ({ board, players, dice, lastEventCard, onSquareClick, selectionMode }) => {
     const getPositionStyle = (squareId) => {
         const position = gridPositions.find(p => p.id === squareId);
         if (position) {
@@ -12,13 +11,6 @@ const Board = ({ board, players, dice, lastEventCard, onSquareClick, selectionMo
         }
         return {};
     };
-
-    const formatTime = (seconds) => {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-    };
-
     const getBuildingIcon = (buildingType) => {
         switch (buildingType) {
             case 'Chùa': return '⛪';
@@ -29,11 +21,11 @@ const Board = ({ board, players, dice, lastEventCard, onSquareClick, selectionMo
     };
 
     return (
-        <><div className="game-timer-overlay">
-            <div className="timer">
-                {formatTime(remainingTime)}
-            </div>
-        </div>
+        // <><div className="game-timer-overlay">
+        //     <div className="timer">
+        //         {formatTime(remainingTime)}
+        //     </div>
+        // </div>
             <div className="board-container">
                 <div className="center-logo">
                     <div className="dice-display-area">
@@ -104,7 +96,7 @@ const Board = ({ board, players, dice, lastEventCard, onSquareClick, selectionMo
                     )
                 })}
             </div>
-        </>
+        // </>
     );
 };
 

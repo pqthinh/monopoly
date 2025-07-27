@@ -43,6 +43,12 @@
     gap: 15px;
 }
 
+.game-content .left-panel h2, h3, h4 {
+    margin: 0;
+    font-size: 1.5em;
+    color: white;
+}
+
 .center-panel {
     flex: 1;
     display: flex;
@@ -62,12 +68,12 @@
     gap: 15px;
 }
 
-.game-info-overlay {
+/* .game-info-overlay {
     position: absolute;
     top: 20px;
     right: 20px;
     z-index: 2;
-}
+} */
 
 .music-toggle {
     background: rgba(139, 69, 19, 0.8);

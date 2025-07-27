@@ -717,7 +717,7 @@
     }
 }
 
-.game-timer-overlay {
+/* .game-timer-overlay {
     position: absolute;
     top: 50px;
     left: 10px;
@@ -733,4 +733,4 @@
     border-radius: 8px;
     font-family: 'Courier New', Courier, monospace;
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-}
+} */

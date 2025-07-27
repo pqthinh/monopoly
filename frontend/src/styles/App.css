@@ -142,7 +142,7 @@ body {
     max-width: 400px;
 }
 
-.game-info-overlay {
+/* .game-info-overlay {
     position: absolute;
     top: 5px;
     left: 5px;
@@ -150,7 +150,7 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
-}
+} */
 
 .music-toggle {
     background-color: rgba(0, 0, 0, 0.7);
