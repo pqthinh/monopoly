@@ -57,7 +57,7 @@ class Game {
             dice: this.dice,
             message: this.message,
             lastEventCard: this.lastEventCard,
-            remainingTime: this.remainingTime, // Gửi thời gian còn lại cho client
+            remainingTime: this.remainingTime,
             turnTimeRemaining: this.turnTimeRemaining,
             turnTimeLimit: this.turnTimeLimit,
         };

@@ -61,9 +61,9 @@ const Game = ({ socket, gameState, myId }) => {
                     <div className="left-panel">
                         <div className="left-panel" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <Button onClick={toggleMusic} className="music-toggle" icon={isMusicPlaying ? <VolumeX size={24} /> : <Music size={24} />} />
-                            <Button variant='info' label="" value={formatTime(gameState.remainingTime)} />
+                            <Button variant='info' label="" value={formatTime(gameState?.remainingTime)} />
                         </div>
-                        <Button variant='info' label="ID" value={gameState.name|| hashStringToNumber(gameState.isHost)} />
+                        <Button variant='info' label="ID" value={gameState.name|| hashStringToNumber(gameState?.isHost||socket.name||"")} />
                         <Controls
                             onPlayerAction={handlePlayerAction}
                             isMyTurn={isMyTurn}

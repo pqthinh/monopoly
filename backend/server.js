@@ -16,11 +16,13 @@ let rooms = {};
 
 const updateRoomList = () => {
     const roomListForClient = Object.values(rooms).map(room => ({
+        ...room,
         id: room.id,
         name: room.name,
         players: room.players.map(p => ({ id: p.id, name: p.name })),
         playerCount: room.players.length,
-        gameStarted: !!room.game
+        gameStarted: !!room.game,
+        hostId: room.hostId
     }));
     io.emit('roomListUpdate', roomListForClient);
 };
@@ -97,7 +99,7 @@ io.on('connection', (socket) => {
             clearInterval(room.timerInterval);
         }
         
-        const playerSockets = room.players.map(p => ({ id: p.id, name: p.name }));
+        const playerSockets = room.players.map(p => ({ ...p, id: p.id, name: p.name }));
         room.game = new Game(playerSockets, room.gameTime);
         
         io.to(room.id).emit('gameStarted', room.game.getGameState());
