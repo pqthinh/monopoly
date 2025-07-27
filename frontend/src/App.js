@@ -5,8 +5,8 @@ import Lobby from './components/Lobby';
 import Game from './components/Game';
 import './styles/App.css';
 
-const socket = io('http://localhost:4000/');
-// const socket = io('https://monopoly.lexispeak.com/');
+// const socket = io('http://localhost:4000/');
+const socket = io('https://monopoly.lexispeak.com/');
 
 function App() {
     const [gameState, setGameState] = useState(null);
