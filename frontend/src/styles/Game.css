@@ -68,13 +68,6 @@
     gap: 15px;
 }
 
-/* .game-info-overlay {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 2;
-} */
-
 .music-toggle {
     background: rgba(139, 69, 19, 0.8);
     border: none;
@@ -92,6 +85,46 @@
 .music-toggle:hover {
     background: rgba(139, 69, 19, 1);
     transform: scale(1.1);
+}
+
+.game-over-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.game-over-content {
+    background: rgba(139, 69, 19, 0.9);
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    color: #FFD700;
+    max-width: 80%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.play-again-button {
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    border: none;
+    border-radius: 10px;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    color: #8B4513;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.play-again-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
 }
 
 @media (max-width: 1200px) {

@@ -36,7 +36,7 @@ const Lobby = ({ socket, myId }) => {
     };
 
     const handleCreateRoom = () => {
-        socket.emit('createRoom', { roomName, gameTime });
+        socket.emit('createRoom', { roomName, gameTime, myId });
         setRoomName('');
     };
 
@@ -136,26 +136,40 @@ const Lobby = ({ socket, myId }) => {
                         <div className="room-list">
                             {Object.keys(rooms).length > 0 ? (
                                 Object.values(rooms).map(room => (
-                                    <div key={room.id} className="room-card">
-                                        <div className="room-info">
-                                            <div className="room-name">
-                                                <Crown size={20} />
-                                                {room.name}
+                                    <div key={room.id}>
+                                        <div className="room-card">
+                                            <div className="room-info">
+                                                <div className="room-name">
+                                                    <Crown size={20} />
+                                                    {room.name}
+                                                </div>
+                                                <div className="room-id">ID: {room.id}</div>
                                             </div>
-                                            <div className="room-id">ID: {room.id}</div>
+                                            <div className="room-details">
+                                                <div className={`players-count ${room.playerCount >= 4 ? 'full' : ''}`}>
+                                                    <Users size={16} />
+                                                    {room.playerCount}/6
+                                                </div>
+                                                <button
+                                                    onClick={() => handleJoinRoom(room.id)}
+                                                    disabled={room.playerCount >= 4}
+                                                    className="join-button"
+                                                >
+                                                    {room.playerCount >= 6 ? '🚫 Đầy' : '🎮 Vào Phòng'}
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div className="room-details">
-                                            <div className={`players-count ${room.playerCount >= 4 ? 'full' : ''}`}>
-                                                <Users size={16} />
-                                                {room.playerCount}/4
-                                            </div>
-                                            <button
-                                                onClick={() => handleJoinRoom(room.id)}
-                                                disabled={room.playerCount >= 4}
-                                                className="join-button"
+                                        <div className="start-game-section">
+                                            <button 
+                                                className="start-game-button"
+                                                onClick={() => socket.emit('startGame')}
+                                                disabled={room?.players.length < 2 && room.hostId !== myId}
                                             >
-                                                {room.playerCount >= 4 ? '🚫 Đầy' : '🎮 Vào Phòng'}
+                                                Bắt đầu trận đấu
                                             </button>
+                                            {room?.players.length < 2 && (
+                                                <p className="warning-text">Cần ít nhất 2 người chơi để bắt đầu</p>
+                                            )}
                                         </div>
                                     </div>
                                 ))

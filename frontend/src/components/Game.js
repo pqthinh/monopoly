@@ -55,6 +55,19 @@ const Game = ({ socket, gameState, myId }) => {
                             player={me}
                             board={gameState.board}
                         />
+                        {gameState.currentPhase === 'game_over' && gameState.room.isHost === myId && (
+                            <div className="game-over-overlay">
+                                <div className="game-over-content">
+                                    <h2>{gameState.message}</h2>
+                                    <button 
+                                        className="play-again-button"
+                                        onClick={() => socket.emit('startNewGame')}
+                                    >
+                                        Chơi tiếp
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                     
                     <div className="center-panel">

@@ -27,17 +27,11 @@ function App() {
             setGameState(newState);
         });
 
-        socket.on('gameReset', (data) => {
-            alert(data.message || data || 'Một người chơi đã thoát, trận đấu bị hủy.');
-            setGameState(null);
-        });
-
         return () => {
             socket.off('connected');
             socket.off('gameStarted');
             socket.off('updateGameState');
             socket.off('timeUpdate');
-            socket.off('gameReset');
         };
     }, []);
 
