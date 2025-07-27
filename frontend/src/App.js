@@ -5,7 +5,7 @@ import Lobby from './components/Lobby';
 import Game from './components/Game';
 import './styles/App.css';
 
-const socket = io('https://monopoly.lexispeak.com/');
+const socket = io('http://localhost:4000/');//io('https://monopoly.lexispeak.com/');
 
 function App() {
     const [gameState, setGameState] = useState(null);
@@ -23,6 +23,9 @@ function App() {
         socket.on('updateGameState', (newState) => {
             setGameState(newState);
         });
+        socket.on('timeUpdate', (newState) => {
+            setGameState(newState);
+        });
 
         socket.on('gameReset', (data) => {
             alert(data.message || data || 'Một người chơi đã thoát, trận đấu bị hủy.');
@@ -33,6 +36,7 @@ function App() {
             socket.off('connected');
             socket.off('gameStarted');
             socket.off('updateGameState');
+            socket.off('timeUpdate');
             socket.off('gameReset');
         };
     }, []);

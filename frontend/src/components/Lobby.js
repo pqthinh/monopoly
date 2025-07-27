@@ -17,7 +17,7 @@ const Lobby = ({ socket, myId }) => {
         socket.on('connect', () => setIsConnected(true));
         socket.on('disconnect', () => setIsConnected(false));
 
-        setName(`Hào kiệt #${Math.floor(Math.random() * 1000)}`);
+        setName(`Người chơi #${Math.floor(Math.random() * 100)}`);
 
         return () => {
             socket.off('roomListUpdate');
@@ -49,112 +49,124 @@ const Lobby = ({ socket, myId }) => {
         <div className="lobby-container">
             <div className="lobby-content">
                 <div className="lobby-header">
-                    <h1 className="game-title">Kỳ Sử Lạc Hồng</h1>
-                    <p className="game-subtitle">Cuộc phiêu lưu bất động sản huyền thoại</p>
-                    <div className={`connection-status ${isConnected ? 'connected' : 'disconnected'}`}>
-                        <Wifi size={16} />
-                        {isConnected ? 'Đã kết nối' : 'Mất kết nối'}
+                    <div className="game-logo">
+                        <h1 className="game-title">Kỳ Sử Lạc Hồng</h1>
+                        <p className="game-subtitle">Boardgame lịch sử Việt Nam</p>
+                        <div className={`connection-status ${isConnected ? 'connected' : 'disconnected'}`}>
+                            <Wifi size={16} />
+                            {isConnected ? 'Đã kết nối' : 'Mất kết nối'}
+                        </div>
                     </div>
                 </div>
 
-                <div className="player-setup">
-                    <div className="setup-section">
-                        <h3 className="setup-title">
-                            <User size={20} />
-                            Thiết lập người chơi
-                        </h3>
-                        <div className="input-group">
-                            <div className="input-wrapper">
+                <div className="lobby-main">
+                    <div className="player-setup-card">
+                        <div className="setup-section player-section">
+                            <h3 className="setup-title">
+                                <User size={24} />
+                                Thiết lập
+                            </h3>
+                            <div className="input-group">
                                 <input
                                     type="text"
                                     value={name}
+                                    name="playerName"
                                     onChange={(e) => setName(e.target.value)}
                                     placeholder="Nhập tên của bạn"
                                     className="input-field"
                                 />
+                                <button onClick={handleSetName} className="action-button primary">
+                                    <Crown size={20} />
+                                    Đặt Tên
+                                </button>
                             </div>
-                            <button onClick={handleSetName} className="action-button primary">
-                                <Crown size={16} />
-                                Đặt Tên
-                            </button>
                         </div>
-                    </div>
 
-                    <div className="setup-section">
-                        <h3 className="setup-title">
-                            <Plus size={20} />
-                            Tạo phòng mới
-                        </h3>
-                        <div className="input-group">
-                            <div className="input-wrapper">
+                        <div className="setup-section room-section">
+                            <h3 className="setup-title">
+                                <Plus size={24} />
+                                Tạo phòng mới
+                            </h3>
+                            <div className="input-group">
                                 <input
                                     type="text"
                                     value={roomName}
+                                    name="roomName"
                                     onChange={(e) => setRoomName(e.target.value)}
                                     placeholder="Tên phòng (bỏ trống để tự động)"
                                     className="input-field"
                                 />
+                                <button onClick={handleCreateRoom} className="action-button create-room">
+                                    <Plus size={20} />
+                                    Tạo Phòng
+                                </button>
                             </div>
-                            <button onClick={handleCreateRoom} className="action-button secondary">
-                                <Plus size={16} />
-                                Tạo Phòng
-                            </button>
-                        </div>
-                        <div className="input-group">
-                             <div className="input-wrapper">
-                                <label htmlFor="game-time-select" className="time-label"><Clock size={16} /> Thời gian chơi:</label>
-                                <select id="game-time-select" value={gameTime} onChange={(e) => setGameTime(Number(e.target.value))} className="input-field">
+                            <div className="time-select-group">
+                                <label className="time-label">
+                                    <Clock size={20} />
+                                    Thời gian chơi:
+                                </label>
+                                <select 
+                                    value={gameTime} 
+                                    onChange={(e) => setGameTime(Number(e.target.value))}
+                                    className="time-select"
+                                    name="gameTime"
+                                >
                                     <option value={300}>5 phút</option>
                                     <option value={600}>10 phút</option>
                                     <option value={900}>15 phút</option>
                                     <option value={1200}>20 phút</option>
+                                    <option value={1800}>30 phút</option>
+                                    <option value={2400}>40 phút</option>
+                                    <option value={3600}>60 phút</option>
                                 </select>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div className="rooms-section">
-                    <div className="rooms-header">
-                        <h2 className="rooms-title">Danh sách phòng</h2>
-                        <span className="rooms-count">{Object.keys(rooms).length} phòng</span>
-                    </div>
+                    <div className="rooms-section">
+                        <div className="rooms-header">
+                            <h2 className="rooms-title">
+                                <Gamepad2 size={24} />
+                                Danh sách phòng
+                            </h2>
+                            <span className="rooms-count">{Object.keys(rooms).length} phòng</span>
+                        </div>
 
-                    <div className="room-list">
-                        {Object.keys(rooms).length > 0 ? (
-                            Object.values(rooms).map(room => (
-                                <div key={room.id} className="room-card">
-                                    <div className="room-info">
-                                        <div className="room-name">
-                                            <Gamepad2 size={18} />
-                                            {room.name}
+                        <div className="room-list">
+                            {Object.keys(rooms).length > 0 ? (
+                                Object.values(rooms).map(room => (
+                                    <div key={room.id} className="room-card">
+                                        <div className="room-info">
+                                            <div className="room-name">
+                                                <Crown size={20} />
+                                                {room.name}
+                                            </div>
+                                            <div className="room-id">ID: {room.id}</div>
                                         </div>
-                                        <div className="room-id">ID: {room.id}</div>
+                                        <div className="room-details">
+                                            <div className={`players-count ${room.playerCount >= 4 ? 'full' : ''}`}>
+                                                <Users size={16} />
+                                                {room.playerCount}/4
+                                            </div>
+                                            <button
+                                                onClick={() => handleJoinRoom(room.id)}
+                                                disabled={room.playerCount >= 4}
+                                                className="join-button"
+                                            >
+                                                {room.playerCount >= 4 ? '🚫 Đầy' : '🎮 Vào Phòng'}
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div className={`players-indicator ${room.playerCount >= 4 ? 'full' : ''}`}>
-                                        <Users size={16} />
-                                        {room.playerCount} / 4
-                                    </div>
-                                    <button
-                                        onClick={() => handleJoinRoom(room.id)}
-                                        disabled={room.playerCount >= 4}
-                                        className="join-button"
-                                    >
-                                        {room.playerCount >= 4 ? (
-                                            <>🚫 Đầy</>
-                                        ) : (
-                                            <>🎮 Vào Phòng</>
-                                        )}
-                                    </button>
+                                ))
+                            ) : (
+                                <div className="empty-rooms">
+                                    <div className="empty-icon">🎲</div>
+                                    <h3>Chưa có phòng nào</h3>
+                                    <p>Hãy tạo phòng mới để bắt đầu!</p>
                                 </div>
-                            ))
-                        ) : (
-                            <div className="empty-state">
-                                <div className="empty-state-icon">🎮</div>
-                                <div className="empty-state-text">Chưa có phòng nào</div>
-                                <div className="empty-state-subtext">Hãy tạo một phòng mới để bắt đầu!</div>
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

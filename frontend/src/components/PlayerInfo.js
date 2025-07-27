@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/PlayerInfo.css'; // We will create this new CSS file
+import '../styles/PlayerInfo.css';
 
 const PlayerInfo = ({ players, currentPlayerId }) => {
   return (

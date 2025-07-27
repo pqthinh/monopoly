@@ -15,9 +15,12 @@
 
 body {
     font-family: 'TextFont' !important;
-    background-image: url('../../public/assets/background.png');
+    background: url('../../public/assets/background.png') no-repeat center center;
+    background-size: cover;
     padding: 0px;
     margin: 0px;
+    height: 100vh;
+    width: 100%;
 }
 
 .app {
