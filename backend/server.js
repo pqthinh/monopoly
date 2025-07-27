@@ -160,6 +160,8 @@ io.on('connection', (socket) => {
                         players: room.players 
                     });
                 }
+            } else {
+                delete rooms[socket.roomId];
             }
         }
         updateRoomList();

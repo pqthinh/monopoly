@@ -39,15 +39,30 @@ const Game = ({ socket, gameState, myId }) => {
 
                 <div className="game-content">
                     <div className="left-panel">
-                        <button onClick={toggleMusic} className="music-toggle">
-                            {isMusicPlaying ? <VolumeX size={24} /> : <Music size={24} />}
-                        </button>
-                        <h2>Trận đấu: {gameState.roomName}</h2>
-                        <h3>Thời gian còn lại: {formatTime(gameState.remainingTime)}s</h3>
-                        <h3>Vòng: {gameState.currentRound}</h3>
-                        <h3>Giai đoạn: {gameState.currentPhase}</h3>
-                        <h3>Người chơi hiện tại: {gameState.currentPlayerName}</h3>
-                        <h4>Thời gian lượt: {formatTime(gameState.turnTimeRemaining)}</h4>
+                        <div className="game-info">
+                            <div className="room-info">
+                                <span className="info-label">ID PHÒNG:</span>
+                                <span className="info-value">{gameState.roomId}</span>
+                            </div>
+                            <div className="time-info">
+                                <span className="info-label">THỜI GIAN:</span>
+                                <span className="info-value">{formatTime(gameState.remainingTime)}</span>
+                            </div>
+                            <button onClick={toggleMusic} className="music-toggle">
+                                {isMusicPlaying ? (
+                                    <>
+                                        <VolumeX size={24} />
+                                        TẮT NHẠC
+                                    </>
+                                ) : (
+                                    <>
+                                        <Music size={24} />
+                                        BẬT NHẠC
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                        
                         <Controls
                             onPlayerAction={handlePlayerAction}
                             isMyTurn={isMyTurn}
@@ -68,6 +83,12 @@ const Game = ({ socket, gameState, myId }) => {
                                 </div>
                             </div>
                         )}
+                        <h2>Trận đấu: {gameState.roomName}</h2>
+                        <h3>Thời gian còn lại: {formatTime(gameState.remainingTime)}s</h3>
+                        <h3>Vòng: {gameState.currentRound}</h3>
+                        <h3>Giai đoạn: {gameState.currentPhase}</h3>
+                        <h3>Người chơi hiện tại: {gameState.currentPlayerName}</h3>
+                        <h4>Thời gian lượt: {formatTime(gameState.turnTimeRemaining)}</h4>
                     </div>
                     
                     <div className="center-panel">

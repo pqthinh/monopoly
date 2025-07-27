@@ -34,19 +34,41 @@
 }
 
 .left-panel {
-    width: 280px;
-    /* background: rgba(139, 69, 19, 0.9); */
-    border-radius: 10px;
-    padding: 15px;
+    background: transparent;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 300px;
+}
+
+.game-info {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.game-content .left-panel h2, h3, h4 {
-    margin: 0;
-    font-size: 1.5em;
-    color: white;
+.room-info,
+.time-info {
+    background: #FF0000;
+    padding: 10px 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info-label {
+    color: #FFD700;
+    font-weight: bold;
+    font-size: 1.1em;
+    text-transform: uppercase;
+}
+
+.info-value {
+    color: #FFD700;
+    font-weight: bold;
+    font-size: 1.2em;
 }
 
 .center-panel {
@@ -69,22 +91,25 @@
 }
 
 .music-toggle {
-    background: rgba(139, 69, 19, 0.8);
+    background: #FF0000;
+    color: #FFD700;
     border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    border-radius: 8px;
+    padding: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
     cursor: pointer;
-    color: white;
     transition: all 0.3s ease;
+    text-transform: uppercase;
 }
 
 .music-toggle:hover {
-    background: rgba(139, 69, 19, 1);
-    transform: scale(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
 }
 
 .game-over-overlay {
