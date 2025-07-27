@@ -28,7 +28,7 @@ const Board = ({ board, players, dice, lastEventCard, onSquareClick, selectionMo
                     <div className="dice-visual">{dice && dice[1] > 0 ? dice[1] : '?'}</div>
                 </div>
 
-                <div className="event-card-display">
+                {/* <div className="event-card-display">
                     {lastEventCard ? (
                         <>
                             <div className={`card-header ${lastEventCard.type.replace(/\s/g, '-').toLowerCase()}`}>
@@ -41,7 +41,7 @@ const Board = ({ board, players, dice, lastEventCard, onSquareClick, selectionMo
                     ) : (
                         <p>Khu vực thẻ Cơ Hội / Vận Mệnh</p>
                     )}
-                </div>
+                </div> */}
             </div>
             {board && board.map((square) => {
                 const borderStyle = square.ownerColor

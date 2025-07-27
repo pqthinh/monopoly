@@ -29,18 +29,17 @@ const BaseButton = styled.button`
 `;
 
 const ControlButton = styled(BaseButton)`
-  background: #FFD700;
-  color: #FF0000;
-  border: 2px solid #FFD700;
+  background: url(./assets/btn/btn_yl.png) no-repeat center center;
+  color: #8b0000;
+  border: 2px solid #b8860b;
+  background-size: fit-content;
+`;
 
-  &:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
-  }
-
-  svg {
-    color: #FF0000;
-  }
+const RedControlButton = styled(BaseButton)`
+  background: url(./assets/btn/btn_yl.png) no-repeat center center;
+  color: #b8860b;
+  border: 2px solid #8b0000;
+  background-size: fit-content;
 `;
 
 const InfoButton = styled(BaseButton)`
@@ -68,7 +67,7 @@ const Value = styled.span`
   font-weight: bold;
 `;
 
-const Button = ({ variant = 'control', label, value, icon: Icon, children, ...props }) => {
+export const Button = ({ variant = 'control', label, value, icon: Icon, children, ...props }) => {
   if (variant === 'info') {
     return (
       <InfoButton {...props}>
@@ -87,4 +86,10 @@ const Button = ({ variant = 'control', label, value, icon: Icon, children, ...pr
   );
 };
 
-export default Button;
+export const RedButton = ({ children, onClick, ...props }) => {
+  return (
+    <RedControlButton onClick={onClick} {...props}>
+      {children}
+    </RedControlButton>
+  );
+}

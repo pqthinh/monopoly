@@ -144,6 +144,7 @@ io.on('connection', (socket) => {
                 
                 if (room.players.length < room.minPlayers) {
                     room.game.endGame(null, "không đủ người chơi");
+                    delete rooms[socket.roomId];
                     io.to(socket.roomId).emit('updateGameState', room.game.getGameState());
                     if (room.timerInterval) clearInterval(room.timerInterval);
                 }

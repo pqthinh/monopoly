@@ -4,7 +4,7 @@ import PlayerInfo from './PlayerInfo';
 import Controls from './Controls';
 import Popup from './Popup';
 import { Music, VolumeX } from 'lucide-react';
-import Button from './Button';
+import {Button, RedButton} from './Button';
 import DecisionPopup from './DecisionPopup';
 import { formatTime } from '../utils';
 import '../styles/Game.css';
@@ -60,9 +60,9 @@ const Game = ({ socket, gameState, myId }) => {
                 <div className="game-content">
                     <div className="left-panel">
                         <Button onClick={toggleMusic} className="music-toggle" icon={isMusicPlaying ? <VolumeX size={24} /> : <Music size={24} />} />
-                        <Button variant='info' label="ID" value={gameState.name} />
+                        <Button variant='info' label="ID" value={gameState.name|| new Date().getTime()} />
                         <Button variant='info' label="" value={formatTime(gameState.remainingTime)} />
-
+                        <RedButton>Id: 11717</RedButton>
                         <Controls
                             onPlayerAction={handlePlayerAction}
                             isMyTurn={isMyTurn}
@@ -70,7 +70,7 @@ const Game = ({ socket, gameState, myId }) => {
                             player={me}
                             board={gameState.board}
                         />
-                        {gameState.currentPhase === 'game_over' && gameState.room.isHost === myId && (
+                        {gameState.currentPhase === 'game_over' && gameState.isHost === myId && (
                             <div className="game-over-overlay">
                                 <div className="game-over-content">
                                     <h2>{gameState.message}</h2>
@@ -83,13 +83,24 @@ const Game = ({ socket, gameState, myId }) => {
                                 </div>
                             </div>
                         )}
-                        <h2>Trận đấu: {gameState.name}</h2>
-                        <h3>Thời gian còn lại: {formatTime(gameState.remainingTime)}s</h3>
                         <h3>Vòng: {gameState.currentRound}</h3>
                         <h3>Giai đoạn: {gameState.currentPhase}</h3>
                         <h3>Người chơi hiện tại: {gameState.currentPlayerName}</h3>
                         <h4>Thời gian lượt: {formatTime(gameState.turnTimeRemaining)}</h4>
-
+                        <div className="event-card-display">
+                            {gameState.lastEventCard ? (
+                                <>
+                                    <div className={`card-header ${gameState.lastEventCard.type.replace(/\s/g, '-').toLowerCase()}`}>
+                                        {gameState.lastEventCard.type}
+                                    </div>
+                                    <div className="card-text">
+                                        {gameState.lastEventCard.text}
+                                    </div>
+                                </>
+                            ) : (
+                                <p>Khu vực thẻ Cơ Hội / Vận Mệnh</p>
+                            )}
+                        </div>
                     </div>
 
                     <div className="center-panel">
