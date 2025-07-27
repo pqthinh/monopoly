@@ -48,7 +48,6 @@ class Game {
         return deck;
     }
 
-    // Thêm method mới để lấy thời gian lượt còn lại
     getGameState() {
         return {
             board: this.board,
@@ -64,12 +63,10 @@ class Game {
         };
     }
 
-    // Method mới để reset thời gian lượt
     resetTurnTimer() {
         this.turnTimeRemaining = this.turnTimeLimit;
     }
 
-    // Method mới để xử lý hết giờ lượt
     handleTurnTimeout() {
         if (this.currentPhase === 'game_over') return;
         
@@ -77,7 +74,6 @@ class Game {
         this.endTurn();
     }
 
-    // --- CÁC HÀM CŨ GIỮ NGUYÊN ---
     getCurrentPlayer() {
         return this.players[this.currentPlayerIndex];
     }
@@ -910,12 +906,6 @@ class Game {
         }
     }
 
-    // --- CÁC HÀM MỚI VÀ HÀM ĐƯỢC CHỈNH SỬA CHO LOGIC HẸN GIỜ ---
-
-    /**
-     * Hàm kết thúc game khi hết giờ.
-     * Tính tổng tài sản để tìm người chiến thắng.
-     */
     endGameByTime() {
         if (this.currentPhase === 'game_over') return;
 
@@ -966,7 +956,6 @@ class Game {
         this.message += `\n${player.name} đã thoát khỏi trận đấu và tự động thua!`;
         this.handlePlayerBankruptcy(player);
 
-        // Nếu đang là lượt của người thoát, chuyển lượt
         if (this.getCurrentPlayer().id === playerId) {
             this.endTurn();
         }
