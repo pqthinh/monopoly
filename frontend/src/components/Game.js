@@ -4,9 +4,9 @@ import PlayerInfo from './PlayerInfo';
 import Controls from './Controls';
 import Popup from './Popup';
 import { Music, VolumeX } from 'lucide-react';
-import {Button, RedButton} from './Button';
+import { Button } from './Button';
 import DecisionPopup from './DecisionPopup';
-import { formatTime } from '../utils';
+import { formatTime, hashStringToNumber } from '../utils';
 import '../styles/Game.css';
 
 const Game = ({ socket, gameState, myId }) => {
@@ -59,10 +59,11 @@ const Game = ({ socket, gameState, myId }) => {
 
                 <div className="game-content">
                     <div className="left-panel">
-                        <Button onClick={toggleMusic} className="music-toggle" icon={isMusicPlaying ? <VolumeX size={24} /> : <Music size={24} />} />
-                        <Button variant='info' label="ID" value={gameState.name|| new Date().getTime()} />
-                        <Button variant='info' label="" value={formatTime(gameState.remainingTime)} />
-                        <RedButton>Id: 11717</RedButton>
+                        <div className="left-panel" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Button onClick={toggleMusic} className="music-toggle" icon={isMusicPlaying ? <VolumeX size={24} /> : <Music size={24} />} />
+                            <Button variant='info' label="" value={formatTime(gameState.remainingTime)} />
+                        </div>
+                        <Button variant='info' label="ID" value={gameState.name|| hashStringToNumber(gameState.isHost)} />
                         <Controls
                             onPlayerAction={handlePlayerAction}
                             isMyTurn={isMyTurn}

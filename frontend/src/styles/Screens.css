@@ -183,7 +183,8 @@
     padding: 15px;
     border-radius: 6px;
     max-height: 400px;
-    overflow-y: auto;
+    overflow: auto;
+    scrollbar-width: none;
     white-space: pre-wrap; /* Wrap long lines */
     font-family: 'Courier New', Courier, monospace;
     font-size: 14px;

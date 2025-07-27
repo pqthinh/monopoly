@@ -77,7 +77,8 @@
 
 .property-management {
     max-height: 150px; /* Giới hạn chiều cao và cho phép cuộn */
-    overflow-y: auto;
+    overflow: auto;
+    scrollbar-width: none;
     padding: 10px;
     background-color: #faf3e0;
     border-radius: 5px;

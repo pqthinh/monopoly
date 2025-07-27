@@ -29,8 +29,9 @@
 .game-content {
     display: flex;
     height: 100%;
-    padding: 20px;
+    padding: 10px;
     gap: 20px;
+    box-sizing: border-box;
 }
 
 .left-panel {
@@ -43,6 +44,7 @@
     gap: 15px;
     height: 95vh;
     overflow: auto;
+    scrollbar-width: none;
 }
 
 .game-content .left-panel h2, h3, h4 {
@@ -70,6 +72,7 @@
     gap: 15px;
     height: 95vh;
     overflow: auto;
+    scrollbar-width: none;
 }
 
 .music-toggle {
