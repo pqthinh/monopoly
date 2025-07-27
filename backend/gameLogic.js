@@ -32,11 +32,9 @@ class Game {
         this.characterDeck = this.shuffle([...characterCards]);
         this.lastEventCard = null;
 
-        // --- LOGIC HẸN GIỜ ---
-        this.remainingTime = gameTimeInSeconds; // Khởi tạo thời gian còn lại
-        this.turnTimeLimit = 30; // 30 giây cho mỗi lượt
+        this.remainingTime = gameTimeInSeconds; 
+        this.turnTimeLimit = 30;
         this.turnTimeRemaining = this.turnTimeLimit;
-        // ---------------------
 
         this.assignInitialCharacters();
         this.applyStartingCharacterEffects();

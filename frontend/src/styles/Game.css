@@ -41,6 +41,8 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+    height: 95vh;
+    overflow: auto;
 }
 
 .game-content .left-panel h2, h3, h4 {
@@ -66,6 +68,8 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+    height: 95vh;
+    overflow: auto;
 }
 
 .music-toggle {

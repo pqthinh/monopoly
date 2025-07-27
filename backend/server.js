@@ -137,15 +137,12 @@ io.on('connection', (socket) => {
         const room = rooms[socket.roomId];
         if (room) {
             if (room.game && !room.game.currentPhase !== 'game_over') {
-                // Đánh dấu người chơi thoát là thua
                 room.game.handlePlayerQuit(socket.id);
                 io.to(socket.roomId).emit('updateGameState', room.game.getGameState());
                 
-                // Xóa người chơi khỏi danh sách
                 room.players = room.players.filter(p => p.id !== socket.id);
                 
                 if (room.players.length < room.minPlayers) {
-                    // Kết thúc game nếu không đủ người chơi tối thiểu
                     room.game.endGame(null, "không đủ người chơi");
                     io.to(socket.roomId).emit('updateGameState', room.game.getGameState());
                     if (room.timerInterval) clearInterval(room.timerInterval);
@@ -160,12 +157,13 @@ io.on('connection', (socket) => {
                         players: room.players 
                     });
                 }
+            } else {
+                delete rooms[socket.roomId];
             }
         }
         updateRoomList();
     });
 
-    // Thêm xử lý khởi tạo game mới
     socket.on('startNewGame', () => {
         const room = rooms[socket.roomId];
         if (room && socket.id === room.hostId && room.players.length >= room.minPlayers) {
