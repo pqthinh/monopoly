@@ -28,164 +28,6 @@
     background: url('../../public/assets/board2.png') center/100% 100% no-repeat;
 }
 
-.dice-display-area {
-    display: flex;
-    gap: 25px;
-    width: 40%;
-    min-height: 140px;
-    /* background: linear-gradient(135deg, #ffffff, #f8f6f0); */
-    border: 3px solid #c8b59c;
-    border-radius: 15px;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    box-shadow: 
-        0 8px 20px rgba(0, 0, 0, 0.15),
-        inset 0 1px 3px rgba(255, 255, 255, 0.5);
-}
-
-.dice-display-area::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.3));
-    border-radius: 12px;
-    pointer-events: none;
-}
-
-.dice-visual {
-    width: 70px;
-    height: 70px;
-    background: linear-gradient(145deg, #ffffff, #f0f0f0);
-    border: 3px solid #d4c8a8;
-    border-radius: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 40px;
-    font-weight: bold;
-    color: #2c3e50;
-    box-shadow: 
-        0 6px 12px rgba(0, 0, 0, 0.2),
-        inset 0 1px 3px rgba(255, 255, 255, 0.7),
-        inset 0 -1px 3px rgba(0, 0, 0, 0.1);
-    position: relative;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    cursor: pointer;
-    z-index: 1;
-}
-
-.dice-visual:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 
-        0 8px 16px rgba(0, 0, 0, 0.25),
-        inset 0 1px 3px rgba(255, 255, 255, 0.7),
-        inset 0 -1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.dice-visual:active {
-    transform: translateY(-1px) scale(1.02);
-    box-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.2),
-        inset 0 1px 3px rgba(255, 255, 255, 0.7),
-        inset 0 -1px 3px rgba(0, 0, 0, 0.1);
-}
-
-/* Thêm hiệu ứng chấm tròn cho xúc xắc */
-.dice-visual::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 8px;
-    height: 8px;
-    background: radial-gradient(circle, #34495e, #2c3e50);
-    border-radius: 50%;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.dice-visual:hover::after {
-    opacity: 0.3;
-}
-
-/* Hiệu ứng cho số trên xúc xắc */
-.dice-visual {
-    font-family: 'Arial Black', Arial, sans-serif;
-    text-shadow: 
-        0 1px 2px rgba(0, 0, 0, 0.3),
-        0 0 8px rgba(52, 73, 94, 0.2);
-}
-
-/* Thêm animation khi xúc xắc thay đổi */
-@keyframes diceRoll {
-    0% { transform: rotateX(0deg) rotateY(0deg); }
-    25% { transform: rotateX(90deg) rotateY(90deg); }
-    50% { transform: rotateX(180deg) rotateY(180deg); }
-    75% { transform: rotateX(270deg) rotateY(270deg); }
-    100% { transform: rotateX(360deg) rotateY(360deg); }
-}
-
-.dice-visual.rolling {
-    animation: diceRoll 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-/* Màu sắc khác nhau cho từng xúc xắc */
-.dice-visual:first-child {
-    border-color: #3498db;
-    background: linear-gradient(145deg, #ebf4fd, #d6e9f8);
-}
-
-.dice-visual:first-child:hover {
-    border-color: #2980b9;
-    background: linear-gradient(145deg, #f0f7ff, #e1ecf7);
-}
-
-.dice-visual:last-child {
-    border-color: #e74c3c;
-    background: linear-gradient(145deg, #fdf0ef, #f8d7da);
-}
-
-.dice-visual:last-child:hover {
-    border-color: #c0392b;
-    background: linear-gradient(145deg, #fff5f5, #f5e6e8);
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    .dice-display-area {
-        width: 50%;
-        gap: 15px;
-        padding: 15px;
-        min-height: 120px;
-    }
-    
-    .dice-visual {
-        width: 60px;
-        height: 60px;
-        font-size: 32px;
-    }
-}
-
-@media (max-width: 480px) {
-    .dice-display-area {
-        width: 60%;
-        gap: 10px;
-        padding: 10px;
-        min-height: 100px;
-    }
-    
-    .dice-visual {
-        width: 50px;
-        height: 50px;
-        font-size: 28px;
-    }
-}
-
 .square {
     font-family: 'TextFont';
     border: 2px solid #9d7f61;
@@ -503,4 +345,12 @@
     .building-container {
         top: 8px;
     }
+}
+
+@keyframes roll {
+    0% { transform: rotateX(0deg) rotateY(0deg) translateY(0); }
+    25% { transform: rotateX(90deg) rotateY(90deg) translateY(-10px); }
+    50% { transform: rotateX(180deg) rotateY(180deg) translateY(10px); }
+    75% { transform: rotateX(270deg) rotateY(270deg) translateY(-10px); }
+    100% { transform: rotateX(360deg) rotateY(360deg) translateY(0); }
 }

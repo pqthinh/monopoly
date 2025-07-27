@@ -7,10 +7,10 @@ const BaseButton = styled.button`
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 1.5em;
-  font-size: 1.2em;
+  padding: 1rem;
+  font-size: 2em;
   font-weight: bold;
-  border-radius: 1em;
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
@@ -46,7 +46,8 @@ const InfoButton = styled(BaseButton)`
   background: #8b0000;
   color: #b8860b;
   border: 2px solid #8b0000;
-  justify-content: space-between;
+  justify-content: space-around;
+  font-size: 2em;
 
   &:hover:not(:disabled) {
     transform: translateY(-2px);
@@ -56,7 +57,7 @@ const InfoButton = styled(BaseButton)`
 
 const Label = styled.span`
   font-weight: bold;
-  margin-right: auto;
+  margin-left: auto;
 `;
 
 const Value = styled.span`

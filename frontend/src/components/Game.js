@@ -59,11 +59,11 @@ const Game = ({ socket, gameState, myId }) => {
 
                 <div className="game-content">
                     <div className="left-panel">
-                        <div className="left-panel" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Button onClick={toggleMusic} className="music-toggle" icon={isMusicPlaying ? <VolumeX size={24} /> : <Music size={24} />} />
-                            <Button variant='info' label="" value={formatTime(gameState?.remainingTime)} />
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Button onClick={toggleMusic} icon={isMusicPlaying ? <VolumeX size="2em" /> : <Music size="2em" />} style={{width: '48%' }} />
+                            <Button variant='info' label="" value={formatTime(gameState?.remainingTime)} style={{width: '48%',padding: '8px' }}/>
                         </div>
-                        <Button variant='info' label="ID" value={gameState.name|| hashStringToNumber(gameState?.isHost||socket.name||"")} />
+                        <Button variant='info' label="ID" value={gameState.name|| hashStringToNumber(gameState?.isHost||socket.name||"thinhpq10")} />
                         <Controls
                             onPlayerAction={handlePlayerAction}
                             isMyTurn={isMyTurn}
@@ -109,6 +109,7 @@ const Game = ({ socket, gameState, myId }) => {
                             board={gameState.board}
                             players={gameState.players}
                             dice={gameState.dice}
+                            isRolling={gameState.currentPhase === 'rolling'}
                             lastEventCard={gameState.lastEventCard}
                             onSquareClick={(squareId) => {
                                 if (isMyTurn && gameState.currentPhase === 'teleport') {

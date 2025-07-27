@@ -1,8 +1,9 @@
 import React from 'react';
 import { gridPositions } from '../logic/data';
+import { DiceDisplayArea, Dice } from './BoardStyled';
 import '../styles/Board.css';
 
-const Board = ({ board, players, dice, lastEventCard, onSquareClick, selectionMode }) => {
+const Board = ({ board, players, dice, isRolling, onSquareClick, selectionMode }) => {
     const getPositionStyle = (squareId) => {
         const position = gridPositions.find(p => p.id === squareId);
         if (position) {
@@ -23,25 +24,18 @@ const Board = ({ board, players, dice, lastEventCard, onSquareClick, selectionMo
     return (
         <div className="board-container">
             <div className="center-logo">
-                <div className="dice-display-area">
-                    <div className="dice-visual">{dice && dice[0] > 0 ? dice[0] : '?'}</div>
-                    <div className="dice-visual">{dice && dice[1] > 0 ? dice[1] : '?'}</div>
-                </div>
-
-                {/* <div className="event-card-display">
-                    {lastEventCard ? (
-                        <>
-                            <div className={`card-header ${lastEventCard.type.replace(/\s/g, '-').toLowerCase()}`}>
-                                {lastEventCard.type}
-                            </div>
-                            <div className="card-text">
-                                {lastEventCard.text}
-                            </div>
-                        </>
-                    ) : (
-                        <p>Khu vực thẻ Cơ Hội / Vận Mệnh</p>
-                    )}
-                </div> */}
+                {/* <DiceDisplayArea>
+                    <DiceVisual isRolling={isRolling}>
+                        <DiceFace value={dice && dice[0] > 0 ? dice[0] : '?'} />
+                    </DiceVisual>
+                    <DiceVisual isRolling={isRolling}>
+                        <DiceFace value={dice && dice[1] > 0 ? dice[1] : '?'} />
+                    </DiceVisual>
+                </DiceDisplayArea> */}
+                <DiceDisplayArea className="dice-display-area">
+                    <Dice value={dice && dice[0] > 0 ? dice[0] : '?'} isRolling={isRolling} />
+                    <Dice value={dice && dice[1] > 0 ? dice[1] : '?'} isRolling={isRolling} />
+                </DiceDisplayArea>
             </div>
             {board && board.map((square) => {
                 const borderStyle = square.ownerColor
