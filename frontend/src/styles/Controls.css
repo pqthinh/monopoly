@@ -145,3 +145,53 @@ hr {
     border-top: 1px solid #ddd3c2;
     margin: 5px 0;
 }
+
+.controls-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.controls-container h3 {
+    margin-top: 0;
+    text-align: center;
+    font-family: 'game', sans-serif;
+}
+
+.controls-container .dice-display {
+    background-color: rgba(0, 0, 0, 0.4);
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    font-weight: bold;
+    min-height: 50px;
+}
+
+.controls-container button {
+    padding: 12px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #c8a34a;
+    color: white;
+    transition: background-color 0.3s;
+    font-family: 'game', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.controls-container button:hover {
+    background-color: #e0b852;
+}
+
+.controls-container button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    color: #999;
+}

@@ -15,14 +15,16 @@
 
 body {
     font-family: 'TextFont' !important;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: url('../../public/assets/background.png') no-repeat center center;
+    background-size: cover;
     padding: 0px;
     margin: 0px;
+    height: 100vh;
+    width: 100%;
 }
 
 .app {
     display: flex;
-    /* flex-wrap: wrap; */
     justify-content: center;
     gap: 0px;
 }
@@ -30,18 +32,6 @@ body {
 .lobby {
     text-align: center;
     padding: 50px;
-}
-
-.right-panel {
-    font-family: 'TextFont' !important;
-    padding: 10px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    width: 300px;
-    box-sizing: border-box;
-    height: 100vh;
-    overflow: scroll;
 }
 
 .player-info, .controls {
@@ -95,10 +85,9 @@ body {
     background-color: #45a049;
 }
 
-/* Thêm vào cuối file src/styles/App.css */
 .game-message-popup {
     position: fixed;
-    bottom: 20px;
+    top: 50%;
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(0, 0, 0, 0.8);
@@ -112,18 +101,6 @@ body {
 .game-message-popup p {
     margin: 5px 0;
 }
-
-/* Thêm vào cuối file */
-/* .lobby-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 50px auto;
-    text-align: center;
-    padding: 30px;
-    background-color: #f5e8d5;
-    border: 3px solid #6b4a2f;
-    border-radius: 10px;
-} */
 
 .player-list {
     margin-top: 20px;
@@ -165,7 +142,7 @@ body {
     max-width: 400px;
 }
 
-.game-info-overlay {
+/* .game-info-overlay {
     position: absolute;
     top: 5px;
     left: 5px;
@@ -173,7 +150,7 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
-}
+} */
 
 .music-toggle {
     background-color: rgba(0, 0, 0, 0.7);

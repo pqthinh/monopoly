@@ -1,4 +1,3 @@
-// src/components/DecisionPopup.js
 import React from 'react';
 import '../styles/Popup.css'; // Tạo file CSS mới cho popup
 
@@ -19,8 +18,14 @@ const DecisionPopup = ({ info, onDecision, onClose }) => {
                     </div>
                 );
             case 'festival':
-                // Tương tự cho lễ hội, cho phép chọn 1 khu đất sở hữu
-                return <div>Lựa chọn cho Lễ Hội...</div>;
+                return <div>
+                        <h3>Ô Lễ hội!</h3>
+                        <p>Chọn một ô để di chuyển đến:</p>
+                        <select onChange={(e) => onDecision({ type: 'teleportTo', payload: { squareId: parseInt(e.target.value) } })}>
+                            <option>Chọn điểm đến</option>
+                            {info.options.map(sq => <option key={sq.id} value={sq.id}>{sq.name}</option>)}
+                        </select>
+                    </div>
             default:
                 return null;
         }

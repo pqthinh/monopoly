@@ -1,0 +1,138 @@
+import React, { useState, useEffect } from 'react';
+import Board from './Board';
+import PlayerInfo from './PlayerInfo';
+import Controls from './Controls';
+import Popup from './Popup';
+import { Music, VolumeX } from 'lucide-react';
+import Button from './Button';
+import DecisionPopup from './DecisionPopup';
+import { formatTime } from '../utils';
+import '../styles/Game.css';
+
+const Game = ({ socket, gameState, myId }) => {
+    const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+    const audioRef = React.useRef(null);
+    const [showDecisionPopup, setShowDecisionPopup] = useState(false);
+    const [popupInfo, setPopupInfo] = useState(null);
+
+    const toggleMusic = () => {
+        if (isMusicPlaying) {
+            audioRef.current.pause();
+        } else {
+            audioRef.current.play();
+        }
+        setIsMusicPlaying(!isMusicPlaying);
+    };
+
+    const me = gameState.players.find(p => p.id === myId);
+    const isMyTurn = gameState.currentPlayerId === myId;
+    const handlePlayerAction = (action) => {
+        socket.emit('playerAction', action);
+    };
+
+    useEffect(() => {
+        if (['teleport', 'festival'].includes(gameState.currentPhase)) {
+            setShowDecisionPopup(true);
+            setPopupInfo({
+                phase: gameState.currentPhase,
+                options: gameState.board,
+                player: gameState.players?.find(p => p.id === gameState.currentPlayerId)
+            });
+        } else {
+            setShowDecisionPopup(false);
+        }
+        if (!gameState || !gameState.players || !myId) {
+            return <div>Đang tải dữ liệu trận đấu... <a href="/">reload</a></div>;
+        }
+        return () => {
+            setShowDecisionPopup(false);
+            setPopupInfo(null);
+        }
+    }, [gameState, myId]);
+
+
+    return (
+        <div className="game-wrapper">
+            <div className="game-background"></div>
+            <div className="game-container">
+                <audio ref={audioRef} src="/background-music.mp3" loop></audio>
+
+                <div className="game-content">
+                    <div className="left-panel">
+                        <Button onClick={toggleMusic} className="music-toggle" icon={isMusicPlaying ? <VolumeX size={24} /> : <Music size={24} />} />
+                        <Button variant='info' label="ID" value={gameState.name} />
+                        <Button variant='info' label="" value={formatTime(gameState.remainingTime)} />
+
+                        <Controls
+                            onPlayerAction={handlePlayerAction}
+                            isMyTurn={isMyTurn}
+                            phase={gameState.currentPhase}
+                            player={me}
+                            board={gameState.board}
+                        />
+                        {gameState.currentPhase === 'game_over' && gameState.room.isHost === myId && (
+                            <div className="game-over-overlay">
+                                <div className="game-over-content">
+                                    <h2>{gameState.message}</h2>
+                                    <button
+                                        className="play-again-button"
+                                        onClick={() => socket.emit('startNewGame')}
+                                    >
+                                        Chơi tiếp
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                        <h2>Trận đấu: {gameState.name}</h2>
+                        <h3>Thời gian còn lại: {formatTime(gameState.remainingTime)}s</h3>
+                        <h3>Vòng: {gameState.currentRound}</h3>
+                        <h3>Giai đoạn: {gameState.currentPhase}</h3>
+                        <h3>Người chơi hiện tại: {gameState.currentPlayerName}</h3>
+                        <h4>Thời gian lượt: {formatTime(gameState.turnTimeRemaining)}</h4>
+
+                    </div>
+
+                    <div className="center-panel">
+                        <Board
+                            board={gameState.board}
+                            players={gameState.players}
+                            dice={gameState.dice}
+                            lastEventCard={gameState.lastEventCard}
+                            onSquareClick={(squareId) => {
+                                if (isMyTurn && gameState.currentPhase === 'teleport') {
+                                    handlePlayerAction({ type: 'teleportTo', payload: { squareId } });
+                                }
+                                if (isMyTurn && gameState.currentPhase === 'festival') {
+                                    handlePlayerAction({ type: 'organizeFestival', payload: { squareId } });
+                                }
+                            }}
+                            selectionMode={isMyTurn && (gameState.currentPhase === 'teleport' || gameState.currentPhase === 'festival')}
+                            remainingTime={gameState.remainingTime}
+                            turnTimeRemaining={gameState.turnTimeRemaining}
+                        />
+                    </div>
+
+                    <div className="right-panel">
+                        <PlayerInfo
+                            players={gameState.players}
+                            currentPlayerId={gameState.currentPlayerId}
+                        />
+                        <Popup message={gameState.message} />
+                    </div>
+                    {showDecisionPopup && isMyTurn && (
+                        <DecisionPopup
+                            info={popupInfo}
+                            onDecision={(decision) => {
+                                handlePlayerAction(decision);
+                                setShowDecisionPopup(false);
+                            }}
+                            onClose={() => setShowDecisionPopup(false)}
+                        />
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Game;

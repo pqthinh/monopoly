@@ -1,129 +1,45 @@
-/* frontend/src/styles/PlayerInfo.css */
+.player-info-container {
+    width: 100%;
+}
 
-.player-info {
-    background-color: #fdfaf2;
-    border-radius: 12px;
-    padding: 15px;
-    border: 2px solid #d3c4a8;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+.player-info-container h2 {
+    text-align: center;
+    border-bottom: 2px solid white;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-family: 'game', sans-serif;
+}
+
+.player-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-left: 5px solid var(--player-color);
     transition: all 0.3s ease;
-    width: 250px; /* Độ rộng cố định */
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    position: relative;
-    border-bottom: 5px solid var(--player-color, #ccc); /* Màu đặc trưng */
 }
 
-.player-info.active-turn {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    border-color: var(--player-color, #8c2d19);
+.player-card.active {
+    box-shadow: 0 0 15px gold, 0 0 5px var(--player-color);
+    border-color: gold;
+    transform: scale(1.02);
 }
-
-.player-info.my-info::after {
-    content: 'BẠN';
-    position: absolute;
-    top: -10px;
-    right: 10px;
-    background-color: var(--player-color, #b5651d);
-    color: white;
-    padding: 2px 8px;
-    border-radius: 5px;
-    font-size: 10px;
-    font-weight: bold;
-}
-
 
 .player-header {
     display: flex;
-    align-items: center;
-    gap: 12px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #e9e2d0;
-}
-
-.player-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 2px solid var(--player-color, #ccc);
-    object-fit: cover;
-}
-
-.player-details {
-    flex-grow: 1;
-}
-
-.player-name {
-    margin: 0;
-    font-size: 18px;
-    color: #3d352e;
-    font-weight: 700;
-}
-
-.player-character {
-    margin: 0;
-    font-size: 14px;
-    color: #6c5f53;
-}
-
-.player-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.stat-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 16px;
-}
-
-.stat-item .stat-icon {
-    font-size: 20px;
-}
-
-.stat-item.money {
+    justify-content: space-between;
     font-weight: bold;
-    color: #1e8e3e; /* Màu xanh lá cho tiền */
-}
-
-.stat-item.status-jail {
-    color: #d93025; /* Màu đỏ cho trạng thái trong tù */
-    font-size: 14px;
+    font-size: 1.1em;
 }
 
 .player-properties {
-    margin-top: auto; /* Đẩy phần tài sản xuống dưới cùng */
+    margin-top: 10px;
+    font-size: 0.9em;
 }
 
-.player-properties h4 {
-    margin: 0 0 8px 0;
-    font-size: 14px;
-    color: #3d352e;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.property-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-}
-
-.property-dot {
-    width: 12px;
-    height: 12px;
-    background-color: var(--player-color, #ccc);
-    border-radius: 50%;
-    border: 1px solid rgba(0,0,0,0.1);
-}
-
-.no-properties {
-    font-size: 13px;
-    color: #888;
-    font-style: italic;
-    margin: 0;
+.player-properties small {
+    display: block;
+    margin-top: 5px;
+    word-wrap: break-word;
+    color: #ccc;
 }

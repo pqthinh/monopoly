@@ -1,9 +1,7 @@
-// src/components/Controls.js
 import React from 'react';
 import '../styles/Controls.css';
 
 const Controls = ({ onPlayerAction, isMyTurn, phase, player, board }) => {
-    // Nếu không phải lượt của người chơi, hiển thị thông báo chờ
     if (!isMyTurn) {
         return (
             <div className="controls">
@@ -12,10 +10,8 @@ const Controls = ({ onPlayerAction, isMyTurn, phase, player, board }) => {
         );
     }
 
-    // Lấy thông tin về ô đất hiện tại người chơi đang đứng
     const currentSquare = board.find(s => s.id === player.position);
 
-    // Hàm render các nút điều khiển chính dựa trên phase của game
     const renderActions = () => {
         switch (phase) {
             case 'rolling':
@@ -91,7 +87,6 @@ const Controls = ({ onPlayerAction, isMyTurn, phase, player, board }) => {
 
     return (
         <div className="controls">
-            {/* Nút sử dụng thẻ nhân vật, hiển thị ở mọi phase nếu đủ điều kiện */}
             {player.character && !player.characterUsed && (
                  <button className="control-button character-card-button" onClick={() => onPlayerAction({ type: 'useCharacterCard' })}>
                     Dùng thẻ: {player.character.name}

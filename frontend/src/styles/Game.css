@@ -1,0 +1,195 @@
+.game-wrapper {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.game-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../../public/assets/background.png') no-repeat center center;
+    background-size: cover;
+    filter: brightness(0.7);
+    z-index: 0;
+}
+
+.game-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-content {
+    display: flex;
+    height: 100%;
+    padding: 20px;
+    gap: 20px;
+}
+
+.left-panel {
+    width: 280px;
+    /* background: rgba(139, 69, 19, 0.9); */
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 95vh;
+    overflow: auto;
+}
+
+.game-content .left-panel h2, h3, h4 {
+    margin: 0;
+    font-size: 1.5em;
+    color: white;
+}
+
+.center-panel {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 600px;
+}
+
+.right-panel {
+    width: 280px;
+    /* background: rgba(139, 69, 19, 0.9); */
+    color: white;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 95vh;
+    overflow: auto;
+}
+
+.music-toggle {
+    background: rgba(139, 69, 19, 0.8);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.music-toggle:hover {
+    background: rgba(139, 69, 19, 1);
+    transform: scale(1.1);
+}
+
+.game-over-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.game-over-content {
+    background: rgba(139, 69, 19, 0.9);
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    color: #FFD700;
+    max-width: 80%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.play-again-button {
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    border: none;
+    border-radius: 10px;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    color: #8B4513;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.play-again-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+}
+
+@media (max-width: 1200px) {
+    .game-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .left-panel,
+    .right-panel {
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .center-panel {
+        order: -1;
+    }
+}
+
+:root {
+    --tile-pos-top-0: 92%; --tile-pos-left-0: 92%;
+    --tile-pos-top-1: 92%; --tile-pos-left-1: 82.5%;
+    --tile-pos-top-2: 92%; --tile-pos-left-2: 75%;
+    --tile-pos-top-3: 92%; --tile-pos-left-3: 67.5%;
+    --tile-pos-top-4: 92%; --tile-pos-left-4: 60%;
+    --tile-pos-top-5: 92%; --tile-pos-left-5: 52.5%;
+    --tile-pos-top-6: 92%; --tile-pos-left-6: 45%;
+    --tile-pos-top-7: 92%; --tile-pos-left-7: 37.5%;
+    --tile-pos-top-8: 92%; --tile-pos-left-8: 30%;
+    --tile-pos-top-9: 92%; --tile-pos-left-9: 22.5%;
+    --tile-pos-top-10: 92%; --tile-pos-left-10: 5%;
+
+    --tile-pos-top-11: 82.5%; --tile-pos-left-11: 5%;
+    --tile-pos-top-12: 75%; --tile-pos-left-12: 5%;
+    --tile-pos-top-13: 67.5%; --tile-pos-left-13: 5%;
+    --tile-pos-top-14: 60%; --tile-pos-left-14: 5%;
+    --tile-pos-top-15: 52.5%; --tile-pos-left-15: 5%;
+    --tile-pos-top-16: 45%; --tile-pos-left-16: 5%;
+    --tile-pos-top-17: 37.5%; --tile-pos-left-17: 5%;
+    --tile-pos-top-18: 30%; --tile-pos-left-18: 5%;
+    --tile-pos-top-19: 22.5%; --tile-pos-left-19: 5%;
+    --tile-pos-top-20: 5%; --tile-pos-left-20: 5%;
+
+    --tile-pos-top-21: 5%; --tile-pos-left-21: 22.5%;
+    --tile-pos-top-22: 5%; --tile-pos-left-22: 30%;
+    --tile-pos-top-23: 5%; --tile-pos-left-23: 37.5%;
+    --tile-pos-top-24: 5%; --tile-pos-left-24: 45%;
+    --tile-pos-top-25: 5%; --tile-pos-left-25: 52.5%;
+    --tile-pos-top-26: 5%; --tile-pos-left-26: 60%;
+    --tile-pos-top-27: 5%; --tile-pos-left-27: 67.5%;
+    --tile-pos-top-28: 5%; --tile-pos-left-28: 75%;
+    --tile-pos-top-29: 5%; --tile-pos-left-29: 82.5%;
+    --tile-pos-top-30: 5%; --tile-pos-left-30: 92%;
+
+    --tile-pos-top-31: 22.5%; --tile-pos-left-31: 92%;
+    --tile-pos-top-32: 30%; --tile-pos-left-32: 92%;
+    --tile-pos-top-33: 37.5%; --tile-pos-left-33: 92%;
+    --tile-pos-top-34: 45%; --tile-pos-left-34: 92%;
+    --tile-pos-top-35: 52.5%; --tile-pos-left-35: 92%;
+    --tile-pos-top-36: 60%; --tile-pos-left-36: 92%;
+    --tile-pos-top-37: 67.5%; --tile-pos-left-37: 92%;
+    --tile-pos-top-38: 75%; --tile-pos-left-38: 92%;
+    --tile-pos-top-39: 82.5%; --tile-pos-left-39: 92%;
+}
