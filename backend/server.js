@@ -27,8 +27,12 @@ app.use('/api/games', require('./routes/game'));
 
 const server = http.createServer(app);
 const io = new Server(server, {
-    cors: { origin: ["http://localhost:3000", "https://monopoly.lexispeak.com"] },
-    // path: "/"
+    cors: { 
+        origin: ["http://localhost:3000", "https://monopoly.lexispeak.com"],
+        methods: ["GET", "POST"]
+    },
+    maxHttpBufferSize: 1e8, // 100 MB
+    pingTimeout: 60000,
     path: "/socket.io/"
 });
 
@@ -262,6 +266,44 @@ io.on('connection', (socket) => {
             console.log(`Chat message in room ${socket.roomId}: ${socket.name}: ${data.message}`);
         }
     });
+
+    socket.on('error', (error) => {
+        console.error('Socket error:', error);
+    });
+
+    // Add try-catch blocks for message handling
+    socket.on('message', (data) => {
+        try {
+            const room = rooms[socket.roomId];
+            if (!room) return;
+
+            // Sanitize the message data before broadcasting
+            const sanitizedMessage = {
+                // userId: socket.id,
+                // username: socket.name || 'Anonymous',
+                // text: String(data.text).slice(0, 500), // Limit message length
+                // timestamp: Date.now()
+                id: Date.now(),
+                playerId: socket.id,
+                playerName: socket.name || 'Người chơi',  
+                message: data.message,
+                timestamp: new Date().toLocaleTimeString('vi-VN', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                })
+            };
+
+            io.to(socket.roomId).emit('message', sanitizedMessage);
+        } catch (error) {
+            console.error('Message handling error:', error);
+            socket.emit('error', 'Failed to process message');
+        }
+    });
+});
+
+// Add global error handler for Socket.IO
+io.engine.on('connection_error', (err) => {
+    console.error('Connection error:', err);
 });
 
 server.listen(4000, () => {

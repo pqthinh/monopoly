@@ -15,8 +15,7 @@
 
 body {
     font-family: 'TextFont' !important;
-    background: url('../../public/assets/background.png') no-repeat center center;
-    background-size: cover;
+    background: url('../../public/assets/background.png') repeat;
     padding: 0px;
     margin: 0px;
     height: 100vh;
@@ -29,8 +28,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: url('../../public/assets/background.png') no-repeat center center;
-    background-size: cover;
+    background: url('../../public/assets/background.png') repeat;
 }
 
 .loading-content {

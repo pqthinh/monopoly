@@ -2,44 +2,57 @@ import React, { useState, useEffect } from 'react';
 import { MessageCircle, Send, X, Users } from 'lucide-react';
 import '../styles/Chat.css';
 
-const Chat = ({ player, socket }) => {
+const Chat = ({ socket, player }) => {
     const [showChat, setShowChat] = useState(false);
-    const [chatMessage, setChatMessage] = useState('');
-    const [chatHistory, setChatHistory] = useState([]);
+    const [newMessage, setNewMessage] = useState('');
+    const [messages, setMessages] = useState([]);
 
     useEffect(() => {
-        if (socket) {
-            // Listen for incoming chat messages
-            socket.on('chatMessage', (message) => {
-                setChatHistory(prev => [...prev, {
-                    id: message.id,
-                    player: message.playerName,
-                    message: message.message,
-                    timestamp: message.timestamp,
-                    isMe: message.playerId === socket.id
-                }]);
-            });
+        const handleMessage = (message) => {
+            setMessages(prev => [...prev, {
+                id: message.id,
+                player: message.playerName,
+                message: message.message,
+                timestamp: message.timestamp,
+                isMe: message.playerId === socket.id
+            }]);
+        };
 
-            // Cleanup socket listeners on unmount
-            return () => {
-                socket.off('chatMessage');
-            };
-        }
+        const handleError = (error) => {
+            console.error('Socket error:', error);
+            // Show error to user if needed
+        };
+
+        socket.on('message', handleMessage);
+        socket.on('error', handleError);
+
+        // Cleanup socket listeners on unmount
+        return () => {
+            socket.off('message', handleMessage);
+            socket.off('error', handleError);
+        };
     }, [socket]);
 
-    const handleSendMessage = () => {
-        if (chatMessage.trim() && socket) {
-            // Send message through socket
-            socket.emit('sendChatMessage', {
-                message: chatMessage.trim()
+    const sendMessage = (e) => {
+        e.preventDefault();
+        if (!newMessage.trim()) return;
+
+        try {
+            socket.emit('message', {
+                playerId: socket.id,
+                playerName: player.name,
+                message: newMessage.trim(),
+                timestamp: new Date().toLocaleTimeString()
             });
-            setChatMessage('');
+            setNewMessage('');
+        } catch (error) {
+            console.error('Failed to send message:', error);
         }
     };
 
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
-            handleSendMessage();
+            sendMessage(e);
         }
     };
 
@@ -51,8 +64,8 @@ const Chat = ({ player, socket }) => {
             >
                 <MessageCircle size={16} />
                 <span>Thảo luận</span>
-                {chatHistory.length > 0 && (
-                    <span className="chat-badge">{chatHistory.length}</span>
+                {messages.length > 0 && (
+                    <span className="chat-badge">{messages.length}</span>
                 )}
             </button>
             
@@ -72,14 +85,14 @@ const Chat = ({ player, socket }) => {
                     </div>
                     
                     <div className="chat-messages">
-                        {chatHistory.length === 0 ? (
+                        {messages.length === 0 ? (
                             <div className="no-messages">
                                 <MessageCircle size={24} />
                                 <p>Chưa có tin nhắn nào...</p>
                                 <small>Hãy bắt đầu cuộc trò chuyện!</small>
                             </div>
                         ) : (
-                            chatHistory.map((msg) => (
+                            messages.map((msg) => (
                                 <div key={msg.id} className={`chat-message ${msg.isMe ? 'my-message' : ''}`}>
                                     <div className="message-header">
                                         <strong className="player-name">{msg.player}</strong>
@@ -95,15 +108,15 @@ const Chat = ({ player, socket }) => {
                         <input
                             type="text"
                             placeholder="Nhập tin nhắn..."
-                            value={chatMessage}
-                            onChange={(e) => setChatMessage(e.target.value)}
+                            value={newMessage}
+                            onChange={(e) => setNewMessage(e.target.value)}
                             onKeyPress={handleKeyPress}
                             maxLength={200}
                         />
                         <button 
                             className="send-button"
-                            onClick={handleSendMessage}
-                            disabled={!chatMessage.trim()}
+                            onClick={sendMessage}
+                            disabled={!newMessage.trim()}
                         >
                             <Send size={14} />
                         </button>
