@@ -1,7 +1,10 @@
+@import './common.css';
+
 /* Controls Container */
 .controls {
-    background: linear-gradient(145deg, #fdf6e3, #faebd7);
-    border: 2px solid #d97706;
+    /* Use common panel base style and extend */
+    background: linear-gradient(145deg, var(--monopoly-cream), var(--monopoly-cream-dark));
+    border: 2px solid var(--monopoly-orange);
     border-radius: 12px;
     padding: 18px;
     margin-top: 15px;
@@ -24,22 +27,16 @@
 
 .waiting-icon {
     font-size: 2rem;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
 }
 
 .waiting-state h3 {
-    color: #92400e;
+    color: var(--monopoly-brown);
     margin: 0;
     font-size: 1.1rem;
 }
 
 .waiting-state p {
-    color: #a16207;
+    color: var(--monopoly-brown-light);
     margin: 0;
     font-size: 0.9rem;
     opacity: 0.8;
@@ -50,7 +47,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #92400e;
+    color: var(--monopoly-brown);
     margin-bottom: 12px;
 }
 
@@ -61,14 +58,14 @@
 }
 
 .jail-header {
-    color: #dc2626;
+    color: var(--danger-red);
     font-size: 1.1rem;
 }
 
 /* Controls Divider */
 .controls-divider {
     height: 2px;
-    background: linear-gradient(90deg, transparent, #d97706, transparent);
+    background: linear-gradient(90deg, transparent, var(--monopoly-orange), transparent);
     border-radius: 1px;
     margin: 8px 0;
 }
@@ -151,9 +148,9 @@
     line-height: 1.4;
 }
 
-/* Control Buttons */
+/* Control Buttons - Use common styles */
 .control-button {
-    background: linear-gradient(135deg, #d97706, #ea580c);
+    background: var(--gradient-primary);
     color: white;
     border: none;
     border-radius: 8px;
@@ -167,72 +164,80 @@
     justify-content: center;
     gap: 8px;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 6px rgba(217, 119, 6, 0.3);
+    box-shadow: var(--shadow-primary);
+    width: 100%;
 }
 
-.control-button:hover {
+.control-button:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4);
+    box-shadow: var(--shadow-primary-hover);
 }
 
-.control-button:active {
+.control-button:active:not(:disabled) {
     transform: translateY(0);
+}
+
+.control-button:disabled {
+    background: #9ca3af !important;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+    opacity: 0.6;
 }
 
 /* Specific Button Styles */
 .roll-dice {
-    background: linear-gradient(135deg, #059669, #047857);
+    background: var(--gradient-success);
     font-size: 1rem;
     padding: 14px 20px;
+    box-shadow: var(--shadow-success);
 }
 
-.roll-dice:hover {
+.roll-dice:hover:not(:disabled) {
     box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
 }
 
 .buy-button {
-    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    background: var(--gradient-purple);
+    box-shadow: 0 2px 6px rgba(124, 58, 237, 0.3);
 }
 
-.buy-button:hover {
+.buy-button:hover:not(:disabled) {
     box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
 }
 
 .end-turn-button {
-    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    background: var(--gradient-danger);
     font-weight: 600;
+    box-shadow: var(--shadow-danger);
 }
 
-.end-turn-button:hover {
-    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+.end-turn-button:hover:not(:disabled) {
+    box-shadow: var(--shadow-danger);
 }
 
 .character-card-button {
-    background: linear-gradient(135deg, #7c2d12, #92400e);
+    background: linear-gradient(135deg, #7c2d12, var(--monopoly-brown));
+    color: white;
+    box-shadow: 0 2px 6px rgba(146, 64, 14, 0.3);
 }
 
-.character-card-button:hover {
+.character-card-button:hover:not(:disabled) {
     box-shadow: 0 4px 12px rgba(146, 64, 14, 0.4);
 }
 
 .jail-button {
-    background: linear-gradient(135deg, #4338ca, #3730a3);
+    background: var(--gradient-info);
+    box-shadow: 0 2px 6px rgba(67, 56, 202, 0.3);
 }
 
-.jail-button:hover {
+.jail-button:hover:not(:disabled) {
     box-shadow: 0 4px 12px rgba(67, 56, 202, 0.4);
-}
-
-.jail-button:disabled {
-    background: #9ca3af;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
 }
 
 /* Build Button */
 .build-button {
-    background: linear-gradient(135deg, #059669, #047857);
+    background: var(--gradient-success);
     color: white;
     border: none;
     border-radius: 6px;
@@ -244,6 +249,7 @@
     align-items: center;
     gap: 4px;
     transition: all 0.2s ease;
+    box-shadow: var(--shadow-success);
 }
 
 .build-button:hover:not(:disabled) {
@@ -255,6 +261,8 @@
     background: #9ca3af;
     cursor: not-allowed;
     opacity: 0.6;
+    transform: none;
+    box-shadow: none;
 }
 
 /* Jail Controls */

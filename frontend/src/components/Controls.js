@@ -7,7 +7,7 @@ const Controls = ({ onPlayerAction, isMyTurn, phase, player, board }) => {
         return (
             <div className="controls">
                 <div className="waiting-state">
-                    <div className="waiting-icon">⏳</div>
+                    <div className="waiting-icon pulse">⏳</div>
                     <h3>Đang chờ lượt người chơi khác...</h3>
                     <p>Hãy kiên nhẫn chờ đợi!</p>
                 </div>
