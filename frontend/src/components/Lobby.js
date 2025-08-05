@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Plus, Crown, Gamepad2, User, Wifi, Clock, LogOut, History, Trophy } from 'lucide-react';
+import gameLogger from '../services/GameLogger';
 import '../styles/Lobby.css';
 
 const Lobby = ({ socket, myId, user, token, onLogout }) => {
@@ -14,15 +15,23 @@ const Lobby = ({ socket, myId, user, token, onLogout }) => {
     useEffect(() => {
         socket.on('roomListUpdate', (updatedRooms) => {
             setRooms(updatedRooms);
+            gameLogger.info('Room list updated', { roomCount: Object.keys(updatedRooms).length });
         });
 
-        socket.on('connect', () => setIsConnected(true));
-        socket.on('disconnect', () => setIsConnected(false));
+        socket.on('connect', () => {
+            setIsConnected(true);
+            gameLogger.info('Socket connected to server');
+        });
+        socket.on('disconnect', () => {
+            setIsConnected(false);
+            gameLogger.warn('Socket disconnected from server');
+        });
 
         // Use authenticated user's name
         if (user && user.username) {
             setName(user.username);
             socket.emit('setName', user.username);
+            gameLogger.userAction('Set username from authenticated user', { username: user.username });
         } else {
             setName(`Người chơi #${Math.floor(Math.random() * 100)}`);
         }
@@ -32,15 +41,49 @@ const Lobby = ({ socket, myId, user, token, onLogout }) => {
             loadGameHistory();
         }
 
+        // Log lobby entry
+        gameLogger.userAction('Entered lobby', { userId: user?.id, username: user?.username });
+
         return () => {
             socket.off('roomListUpdate');
             socket.off('connect');
             socket.off('disconnect');
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket, user, token]);
 
     const loadGameHistory = async () => {
         try {
+            // For development, create mock game history
+            if (token && token.startsWith('mock-')) {
+                const mockHistory = [
+                    {
+                        id: 1,
+                        createdAt: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+                        duration: 720, // 12 minutes
+                        winner: { username: 'testuser' },
+                        players: [{ username: 'testuser' }, { username: 'player2' }]
+                    },
+                    {
+                        id: 2,
+                        createdAt: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+                        duration: 480, // 8 minutes
+                        winner: { username: 'player3' },
+                        players: [{ username: 'testuser' }, { username: 'player3' }]
+                    },
+                    {
+                        id: 3,
+                        createdAt: new Date(Date.now() - 259200000).toISOString(), // 3 days ago
+                        duration: 900, // 15 minutes
+                        winner: { username: 'testuser' },
+                        players: [{ username: 'testuser' }, { username: 'player4' }]
+                    }
+                ];
+                setGameHistory(mockHistory);
+                gameLogger.info('Mock game history loaded', { historyCount: mockHistory.length });
+                return;
+            }
+
             const response = await fetch('/api/games', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -50,14 +93,16 @@ const Lobby = ({ socket, myId, user, token, onLogout }) => {
             if (response.ok) {
                 const history = await response.json();
                 setGameHistory(history.slice(0, 5)); // Show last 5 games
+                gameLogger.info('Game history loaded from API', { historyCount: history.length });
             }
         } catch (error) {
-            console.error('Error loading game history:', error);
+            gameLogger.error('Error loading game history', { error: error.message });
         }
     };
 
     const handleSetName = () => {
         socket.emit('setName', name);
+        gameLogger.userAction('Set custom name', { name });
         const notification = document.createElement('div');
         notification.className = 'name-notification';
         notification.innerHTML = `✨ Tên của bạn đã được đặt là: <strong>${name}</strong>`;
@@ -67,12 +112,19 @@ const Lobby = ({ socket, myId, user, token, onLogout }) => {
 
     const handleCreateRoom = () => {
         socket.emit('createRoom', { roomName, gameTime, myId });
+        gameLogger.gameEvent('Room created', { roomName: roomName || 'Auto-generated', gameTime });
         setRoomName('');
     };
 
     const handleJoinRoom = (roomId) => {
         socket.emit('setName', name);
         socket.emit('joinRoom', roomId);
+        gameLogger.gameEvent('Joined room', { roomId });
+    };
+
+    const handleLogout = () => {
+        gameLogger.userAction('User logout', { userId: user?.id, username: user?.username });
+        onLogout();
     };
 
     const formatGameDuration = (seconds) => {
@@ -126,7 +178,7 @@ const Lobby = ({ socket, myId, user, token, onLogout }) => {
                                             <History size={16} />
                                             Lịch sử trận đấu
                                         </button>
-                                        <button onClick={onLogout}>
+                                        <button onClick={handleLogout}>
                                             <LogOut size={16} />
                                             Đăng xuất
                                         </button>

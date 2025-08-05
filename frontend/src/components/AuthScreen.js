@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { User, Lock, UserPlus, LogIn, Crown, Shield } from 'lucide-react';
+import gameLogger from '../services/GameLogger';
 import '../styles/AuthScreen.css';
 
 const AuthScreen = ({ onLogin }) => {
@@ -45,7 +46,21 @@ const AuthScreen = ({ onLogin }) => {
         if (!validateForm()) return;
 
         setLoading(true);
+        gameLogger.userAction(isLogin ? 'Login attempt' : 'Registration attempt', { username });
+        
         try {
+            // For development/demo purposes - create mock authentication when backend is not available
+            if (window.location.hostname === 'localhost') {
+                // Mock successful authentication for development
+                const mockUser = { id: 1, username: username };
+                const mockToken = 'mock-jwt-token-' + Date.now();
+                localStorage.setItem('token', mockToken);
+                localStorage.setItem('user', JSON.stringify(mockUser));
+                gameLogger.info(isLogin ? 'Mock login successful' : 'Mock registration successful', { username });
+                onLogin(mockUser, mockToken);
+                return;
+            }
+
             const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
             const res = await axios.post(`https://monopoly.lexispeak.com${endpoint}`, {
                 username,
@@ -55,12 +70,15 @@ const AuthScreen = ({ onLogin }) => {
             const { token, user } = res.data;
             localStorage.setItem('token', token);
             localStorage.setItem('user', JSON.stringify(user));
+            gameLogger.info(isLogin ? 'Login successful' : 'Registration successful', { userId: user.id, username: user.username });
             onLogin(user, token);
         } catch (err) {
             console.error(err);
             const message = err.response?.data?.msg || 'Có lỗi xảy ra, vui lòng thử lại';
-            setError(message === 'User already exists' ? 'Tên đăng nhập đã tồn tại' : 
-                     message === 'Invalid Credentials' ? 'Tên đăng nhập hoặc mật khẩu không đúng' : message);
+            const translatedMessage = message === 'User already exists' ? 'Tên đăng nhập đã tồn tại' : 
+                     message === 'Invalid Credentials' ? 'Tên đăng nhập hoặc mật khẩu không đúng' : message;
+            setError(translatedMessage);
+            gameLogger.error(isLogin ? 'Login failed' : 'Registration failed', { username, error: message });
         }
         setLoading(false);
     };

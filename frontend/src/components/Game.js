@@ -7,6 +7,7 @@ import { Music, VolumeX, Settings, LogOut, User } from 'lucide-react';
 import { Button } from './Button';
 import DecisionPopup from './DecisionPopup';
 import { formatTime, hashStringToNumber } from '../utils';
+import gameLogger from '../services/GameLogger';
 import '../styles/Game.css';
 
 const Game = ({ socket, gameState, myId, user, onLogout }) => {
@@ -19,8 +20,10 @@ const Game = ({ socket, gameState, myId, user, onLogout }) => {
     const toggleMusic = () => {
         if (isMusicPlaying) {
             audioRef.current.pause();
+            gameLogger.userAction('Music paused');
         } else {
             audioRef.current.play();
+            gameLogger.userAction('Music started');
         }
         setIsMusicPlaying(!isMusicPlaying);
     };
@@ -28,7 +31,13 @@ const Game = ({ socket, gameState, myId, user, onLogout }) => {
     const me = gameState.players.find(p => p.id === myId);
     const isMyTurn = gameState.currentPlayerId === myId;
     const handlePlayerAction = (action) => {
+        gameLogger.gameEvent('Player action', { action, playerId: myId, currentPhase: gameState.currentPhase });
         socket.emit('playerAction', action);
+    };
+
+    const handleLogout = () => {
+        gameLogger.userAction('Logout from game', { userId: user?.id, gameState: gameState.currentPhase });
+        onLogout();
     };
 
     useEffect(() => {
@@ -75,7 +84,7 @@ const Game = ({ socket, gameState, myId, user, onLogout }) => {
                                     </button>
                                     {showGameMenu && (
                                         <div className="game-dropdown">
-                                            <button onClick={onLogout}>
+                                            <button onClick={handleLogout}>
                                                 <LogOut size={14} />
                                                 Rời khỏi game
                                             </button>
