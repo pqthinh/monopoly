@@ -825,7 +825,7 @@ class Game {
         }
         
         this.currentPhase = 'rolling';
-        this.resetTurnTimer(); // Reset timer khi chuyển lượt
+        this.resetTurnTimer();
         this.message = `Đến lượt của ${this.getCurrentPlayer().name}.`;
     }
 
@@ -920,7 +920,7 @@ class Game {
                     if (!prop) return sum;
                     const propertyValue = prop.price || 0;
                     const buildingValue = (prop.buildings || 0) * (prop.buildCost || 0);
-                    return sum + (propertyValue / 2) + (buildingValue / 2);
+                    return sum + (propertyValue * 100/100) + (buildingValue * 100/100);
                 }, 0);
                 
                 if (totalAssets > maxAssets) {
