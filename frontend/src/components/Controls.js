@@ -1,11 +1,79 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { MessageCircle, Send, X } from 'lucide-react';
 import '../styles/Controls.css';
 
 const Controls = ({ onPlayerAction, isMyTurn, phase, player, board }) => {
+    const [showChat, setShowChat] = useState(false);
+    const [chatMessage, setChatMessage] = useState('');
+    const [chatHistory, setChatHistory] = useState([]);
+
     if (!isMyTurn) {
         return (
             <div className="controls">
                 <h3>Đang chờ lượt người chơi khác...</h3>
+                <div className="waiting-actions">
+                    <button 
+                        className="chat-toggle-button"
+                        onClick={() => setShowChat(!showChat)}
+                    >
+                        <MessageCircle size={16} />
+                        {showChat ? 'Ẩn chat' : 'Mở chat'}
+                    </button>
+                </div>
+                {showChat && (
+                    <div className="chat-panel">
+                        <div className="chat-header">
+                            <span>Thảo luận</span>
+                            <button onClick={() => setShowChat(false)}>
+                                <X size={16} />
+                            </button>
+                        </div>
+                        <div className="chat-messages">
+                            {chatHistory.length === 0 ? (
+                                <p>Chưa có tin nhắn nào...</p>
+                            ) : (
+                                chatHistory.map((msg, index) => (
+                                    <div key={index} className="chat-message">
+                                        <strong>{msg.player}:</strong> {msg.message}
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                        <div className="chat-input">
+                            <input
+                                type="text"
+                                placeholder="Nhập tin nhắn..."
+                                value={chatMessage}
+                                onChange={(e) => setChatMessage(e.target.value)}
+                                onKeyPress={(e) => {
+                                    if (e.key === 'Enter') {
+                                        // Handle sending chat message
+                                        if (chatMessage.trim()) {
+                                            setChatHistory([...chatHistory, {
+                                                player: player?.name || 'Bạn',
+                                                message: chatMessage
+                                            }]);
+                                            setChatMessage('');
+                                        }
+                                    }
+                                }}
+                            />
+                            <button 
+                                onClick={() => {
+                                    if (chatMessage.trim()) {
+                                        setChatHistory([...chatHistory, {
+                                            player: player?.name || 'Bạn',
+                                            message: chatMessage
+                                        }]);
+                                        setChatMessage('');
+                                    }
+                                }}
+                            >
+                                <Send size={14} />
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         );
     }
