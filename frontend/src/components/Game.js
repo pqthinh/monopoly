@@ -3,6 +3,7 @@ import Board from './Board';
 import PlayerInfo from './PlayerInfo';
 import Controls from './Controls';
 import Popup from './Popup';
+import Chat from './Chat';
 import { Music, VolumeX, Settings, LogOut, User } from 'lucide-react';
 import { Button } from './Button';
 import DecisionPopup from './DecisionPopup';
@@ -168,6 +169,7 @@ const Game = ({ socket, gameState, myId, user, onLogout }) => {
                             players={gameState.players}
                             currentPlayerId={gameState.currentPlayerId}
                         />
+                        <Chat player={me} />
                         <Popup message={gameState.message} />
                     </div>
                     {showDecisionPopup && isMyTurn && (

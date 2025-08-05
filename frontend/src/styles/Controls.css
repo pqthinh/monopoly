@@ -1,320 +1,288 @@
+/* Controls Container */
 .controls {
-    background-color: #fdf6e3; /* Màu nền kem nhạt, giống giấy cũ */
-    border: 2px solid #c8bda9; /* Viền màu nâu đất nhạt */
-    border-radius: 10px;
-    padding: 15px;
+    background: linear-gradient(145deg, #fdf6e3, #faebd7);
+    border: 2px solid #d97706;
+    border-radius: 12px;
+    padding: 18px;
     margin-top: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.15);
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 16px;
     box-sizing: border-box;
 }
 
-/* Waiting Actions */
-.waiting-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-}
-
-.chat-toggle-button {
-    background: linear-gradient(45deg, #6366f1, #8b5cf6);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-family: 'TextFont', sans-serif;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
-}
-
-.chat-toggle-button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-}
-
-/* Chat Panel */
-.chat-panel {
-    background: rgba(139, 69, 19, 0.1);
-    border: 2px solid rgba(255, 215, 0, 0.3);
-    border-radius: 10px;
-    padding: 0;
-    margin-top: 10px;
-    max-height: 300px;
+/* Waiting State */
+.waiting-state {
     display: flex;
     flex-direction: column;
-}
-
-.chat-header {
-    background: rgba(139, 69, 19, 0.2);
-    padding: 10px 15px;
-    border-bottom: 1px solid rgba(255, 215, 0, 0.3);
-    display: flex;
-    justify-content: space-between;
     align-items: center;
-    border-radius: 8px 8px 0 0;
-}
-
-.chat-header span {
-    color: #8B4513;
-    font-weight: bold;
-    font-family: 'TextFont', sans-serif;
-}
-
-.chat-header button {
-    background: none;
-    border: none;
-    color: #8B4513;
-    cursor: pointer;
-    padding: 4px;
-    border-radius: 4px;
-    transition: background 0.3s ease;
-}
-
-.chat-header button:hover {
-    background: rgba(139, 69, 19, 0.2);
-}
-
-.chat-messages {
-    flex: 1;
-    padding: 10px;
-    max-height: 150px;
-    overflow-y: auto;
-    color: #584b3e;
-    font-size: 0.9rem;
-}
-
-.chat-message {
-    margin-bottom: 8px;
-    padding: 6px 8px;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 6px;
-    border-left: 3px solid #FFD700;
-}
-
-.chat-input {
-    display: flex;
-    padding: 10px;
-    gap: 8px;
-    border-top: 1px solid rgba(255, 215, 0, 0.3);
-}
-
-.chat-input input {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid rgba(255, 215, 0, 0.5);
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.8);
-    color: #584b3e;
-    font-family: 'TextFont', sans-serif;
-    font-size: 0.9rem;
-}
-
-.chat-input input:focus {
-    outline: none;
-    border-color: #FFD700;
-    box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
-}
-
-.chat-input button {
-    background: linear-gradient(45deg, #FFD700, #FFA500);
-    color: #8B4513;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.chat-input button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
-}
-
-.controls h3, .controls h4, .controls h5 {
-    color: #584b3e; /* Màu chữ nâu sẫm */
-    margin-top: 0;
-    margin-bottom: 10px;
+    gap: 12px;
+    padding: 20px;
     text-align: center;
-    border-bottom: 1px solid #ddd3c2;
-    padding-bottom: 8px;
 }
 
-/* Kiểu cơ bản cho tất cả các nút */
-.control-button {
-    width: 100%;
-    padding: 12px 15px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    color: white;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+.waiting-icon {
+    font-size: 2rem;
+    animation: pulse 2s infinite;
 }
 
-.control-button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
 }
 
-.control-button:active:not(:disabled) {
-    transform: translateY(0);
+.waiting-state h3 {
+    color: #92400e;
+    margin: 0;
+    font-size: 1.1rem;
 }
 
-.control-button:disabled {
-    background-color: #a8a8a8;
-    cursor: not-allowed;
-    opacity: 0.7;
+.waiting-state p {
+    color: #a16207;
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.8;
 }
 
-/* Các nút có màu sắc riêng */
-.roll-dice {
-    background-color: #2a9d8f; /* Màu xanh cổ vịt */
+/* Action Headers */
+.action-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #92400e;
+    margin-bottom: 12px;
 }
 
-.action-button {
-    background-color: #e76f51; /* Màu cam cháy */
+.action-header h4 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
-.end-turn-button {
-    background-color: #8d6e63; /* Màu nâu xám */
+.jail-header {
+    color: #dc2626;
+    font-size: 1.1rem;
 }
 
-.character-card-button {
-    background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); /* Hiệu ứng vàng gold */
-    color: #4a3f35;
-    border: 1px solid #a9884d;
+/* Controls Divider */
+.controls-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #d97706, transparent);
+    border-radius: 1px;
+    margin: 8px 0;
 }
 
-/* Khu vực quản lý tài sản */
+/* Character Section */
+.character-section {
+    margin-bottom: 8px;
+}
+
+/* Action Section */
+.action-section, .special-action, .game-over-state {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Management Controls */
 .management-controls {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 16px;
 }
 
-.property-management {
-    max-height: 150px; /* Giới hạn chiều cao và cho phép cuộn */
-    overflow: auto;
-    scrollbar-width: none;
-    padding: 10px;
-    background-color: #faf3e0;
-    border-radius: 5px;
-    border: 1px solid #ddd3c2;
+.property-management h5 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #92400e;
+    margin: 0 0 12px 0;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
 .property-manage-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 5px;
-    border-bottom: 1px solid #e9e0cf;
+    padding: 8px 12px;
+    background: rgba(217, 119, 6, 0.05);
+    border: 1px solid rgba(217, 119, 6, 0.2);
+    border-radius: 8px;
+    margin-bottom: 8px;
 }
 
-.property-manage-row:last-child {
-    border-bottom: none;
+.property-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #92400e;
+    font-size: 0.85rem;
+    font-weight: 500;
 }
 
-.property-manage-row span {
-    color: #333;
-    font-size: 14px;
+.no-properties {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px;
+    color: #a16207;
+    text-align: center;
 }
 
-.build-button {
-    padding: 5px 10px;
-    font-size: 12px;
-    border-radius: 5px;
-    background-color: #264653; /* Màu xanh đen */
+.no-properties p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Info Message */
+.info-message {
+    background: rgba(59, 130, 246, 0.1);
+    border: 2px solid rgba(59, 130, 246, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    color: #1e40af;
+    font-size: 0.9rem;
+    text-align: center;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Control Buttons */
+.control-button {
+    background: linear-gradient(135deg, #d97706, #ea580c);
     color: white;
     border: none;
+    border-radius: 8px;
+    padding: 12px 16px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    font-family: 'TextFont', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(217, 119, 6, 0.3);
+}
+
+.control-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4);
+}
+
+.control-button:active {
+    transform: translateY(0);
+}
+
+/* Specific Button Styles */
+.roll-dice {
+    background: linear-gradient(135deg, #059669, #047857);
+    font-size: 1rem;
+    padding: 14px 20px;
+}
+
+.roll-dice:hover {
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
+}
+
+.buy-button {
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+}
+
+.buy-button:hover {
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+}
+
+.end-turn-button {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    font-weight: 600;
+}
+
+.end-turn-button:hover {
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+}
+
+.character-card-button {
+    background: linear-gradient(135deg, #7c2d12, #92400e);
+}
+
+.character-card-button:hover {
+    box-shadow: 0 4px 12px rgba(146, 64, 14, 0.4);
+}
+
+.jail-button {
+    background: linear-gradient(135deg, #4338ca, #3730a3);
+}
+
+.jail-button:hover {
+    box-shadow: 0 4px 12px rgba(67, 56, 202, 0.4);
+}
+
+.jail-button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Build Button */
+.build-button {
+    background: linear-gradient(135deg, #059669, #047857);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-family: 'TextFont', sans-serif;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
 }
 
 .build-button:hover:not(:disabled) {
-    background-color: #2a9d8f;
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
 }
 
 .build-button:disabled {
-    background-color: #999;
+    background: #9ca3af;
     cursor: not-allowed;
+    opacity: 0.6;
 }
 
-
-/* Khu vực trong tù */
+/* Jail Controls */
 .jail-controls {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
+    padding: 16px;
+    background: rgba(220, 38, 38, 0.05);
+    border: 2px solid rgba(220, 38, 38, 0.2);
+    border-radius: 10px;
 }
 
-/* Thông báo hướng dẫn */
-.info-message {
-    text-align: center;
-    font-style: italic;
-    color: #e76f51;
-    font-weight: bold;
-}
-
-hr {
-    border: none;
-    border-top: 1px solid #ddd3c2;
-    margin: 5px 0;
-}
-
-.controls-container {
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 15px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.controls-container h3 {
-    margin-top: 0;
-    text-align: center;
-    font-family: 'game', sans-serif;
-}
-
-.controls-container .dice-display {
-    background-color: rgba(0, 0, 0, 0.4);
-    text-align: center;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 1.2em;
-    font-weight: bold;
-    min-height: 50px;
-}
-
-.controls-container button {
-    padding: 12px;
-    font-size: 1em;
-    font-weight: bold;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    background-color: #c8a34a;
-    color: white;
-    transition: background-color 0.3s;
-    font-family: 'game', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.controls-container button:hover {
-    background-color: #e0b852;
-}
-
-.controls-container button:disabled {
-    background-color: #555;
-    cursor: not-allowed;
-    color: #999;
+/* Responsive Design */
+@media (max-width: 768px) {
+    .controls {
+        padding: 15px;
+        gap: 12px;
+    }
+    
+    .control-button {
+        padding: 10px 14px;
+        font-size: 0.85rem;
+    }
+    
+    .property-manage-row {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
 }
