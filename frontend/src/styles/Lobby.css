@@ -89,11 +89,34 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    background: rgba(139, 69, 19, 0.9);
-    padding: 1rem 1.5rem;
-    border-radius: 15px;
-    border: 2px solid rgba(255, 215, 0, 0.3);
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.95), rgba(101, 46, 13, 0.9));
+    padding: 1.2rem 1.8rem;
+    border-radius: 18px;
+    border: 3px solid rgba(255, 215, 0, 0.4);
     position: relative;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3),
+                0 4px 15px rgba(255, 215, 0, 0.2),
+                inset 0 1px 0 rgba(255, 215, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.user-info::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #FFD700, #FFA500, #FF8C00, #FFD700);
+    border-radius: 20px;
+    z-index: -1;
+    opacity: 0.7;
+    animation: userInfoGlow 3s ease-in-out infinite;
+}
+
+@keyframes userInfoGlow {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 0.9; }
 }
 
 .user-avatar {
@@ -369,18 +392,47 @@
 }
 
 .room-card {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 15px;
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.92), rgba(101, 46, 13, 0.88));
+    border: 3px solid rgba(255, 215, 0, 0.4);
+    border-radius: 16px;
     padding: 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25),
+                0 2px 8px rgba(255, 215, 0, 0.1),
+                inset 0 1px 0 rgba(255, 215, 0, 0.2);
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.room-card::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #FFD700, #FFA500, #FF8C00, #FFD700);
+    border-radius: 18px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .room-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-4px) scale(1.02);
+    border-color: #FFD700;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35),
+                0 8px 25px rgba(255, 215, 0, 0.3),
+                inset 0 1px 0 rgba(255, 215, 0, 0.4);
+}
+
+.room-card:hover::before {
+    opacity: 0.4;
 }
 
 .room-info {
@@ -390,18 +442,21 @@
 }
 
 .room-name {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #334155;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #FFD700;
     display: flex;
     align-items: center;
     gap: 8px;
+    font-family: 'TextFont', sans-serif;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .room-id {
     font-size: 0.85rem;
-    color: #64748b;
+    color: #D4AF37;
     font-family: 'Monaco', monospace;
+    opacity: 0.9;
 }
 
 .players-indicator {
@@ -409,16 +464,19 @@
     align-items: center;
     gap: 6px;
     padding: 8px 12px;
-    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 165, 0, 0.1));
+    border: 1px solid rgba(255, 215, 0, 0.3);
     border-radius: 10px;
     font-weight: 600;
     font-size: 0.9rem;
-    color: #475569;
+    color: #D4AF37;
+    font-family: 'TextFont', sans-serif;
 }
 
 .players-indicator.full {
-    background: linear-gradient(135deg, #fef3c7, #fbbf24);
-    color: #92400e;
+    background: linear-gradient(135deg, rgba(255, 140, 0, 0.2), rgba(255, 69, 0, 0.15));
+    border-color: rgba(255, 140, 0, 0.4);
+    color: #FF8C00;
 }
 
 .join-button {

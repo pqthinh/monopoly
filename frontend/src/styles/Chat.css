@@ -155,9 +155,24 @@
     transition: all 0.2s ease;
 }
 
+.chat-message.my-message {
+    background: rgba(79, 70, 229, 0.1);
+    border: 1px solid rgba(79, 70, 229, 0.2);
+    margin-left: 20px;
+}
+
+.chat-message.my-message .player-name {
+    color: #4f46e5;
+}
+
 .chat-message:hover {
     background: rgba(217, 119, 6, 0.15);
     transform: translateX(2px);
+}
+
+.chat-message.my-message:hover {
+    background: rgba(79, 70, 229, 0.15);
+    transform: translateX(-2px);
 }
 
 .message-header {

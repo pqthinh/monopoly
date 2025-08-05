@@ -169,7 +169,7 @@ const Game = ({ socket, gameState, myId, user, onLogout }) => {
                             players={gameState.players}
                             currentPlayerId={gameState.currentPlayerId}
                         />
-                        <Chat player={me} />
+                        <Chat player={me} socket={socket} />
                         <Popup message={gameState.message} />
                     </div>
                     {showDecisionPopup && isMyTurn && (

@@ -1,22 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MessageCircle, Send, X, Users } from 'lucide-react';
 import '../styles/Chat.css';
 
-const Chat = ({ player }) => {
+const Chat = ({ player, socket }) => {
     const [showChat, setShowChat] = useState(false);
     const [chatMessage, setChatMessage] = useState('');
     const [chatHistory, setChatHistory] = useState([]);
 
+    useEffect(() => {
+        if (socket) {
+            // Listen for incoming chat messages
+            socket.on('chatMessage', (message) => {
+                setChatHistory(prev => [...prev, {
+                    id: message.id,
+                    player: message.playerName,
+                    message: message.message,
+                    timestamp: message.timestamp,
+                    isMe: message.playerId === socket.id
+                }]);
+            });
+
+            // Cleanup socket listeners on unmount
+            return () => {
+                socket.off('chatMessage');
+            };
+        }
+    }, [socket]);
+
     const handleSendMessage = () => {
-        if (chatMessage.trim()) {
-            setChatHistory([...chatHistory, {
-                player: player?.name || 'Bạn',
-                message: chatMessage,
-                timestamp: new Date().toLocaleTimeString('vi-VN', { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                })
-            }]);
+        if (chatMessage.trim() && socket) {
+            // Send message through socket
+            socket.emit('sendChatMessage', {
+                message: chatMessage.trim()
+            });
             setChatMessage('');
         }
     };
@@ -63,8 +79,8 @@ const Chat = ({ player }) => {
                                 <small>Hãy bắt đầu cuộc trò chuyện!</small>
                             </div>
                         ) : (
-                            chatHistory.map((msg, index) => (
-                                <div key={index} className="chat-message">
+                            chatHistory.map((msg) => (
+                                <div key={msg.id} className={`chat-message ${msg.isMe ? 'my-message' : ''}`}>
                                     <div className="message-header">
                                         <strong className="player-name">{msg.player}</strong>
                                         <span className="message-time">{msg.timestamp}</span>

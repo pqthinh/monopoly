@@ -241,6 +241,27 @@ io.on('connection', (socket) => {
             startNewGame(room);
         }
     });
+
+    // Chat message handlers
+    socket.on('sendChatMessage', (data) => {
+        const room = rooms[socket.roomId];
+        if (room) {
+            const chatMessage = {
+                id: Date.now(),
+                playerId: socket.id,
+                playerName: socket.name || 'Người chơi',  
+                message: data.message,
+                timestamp: new Date().toLocaleTimeString('vi-VN', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                })
+            };
+            
+            // Broadcast message to all players in the room
+            io.to(socket.roomId).emit('chatMessage', chatMessage);
+            console.log(`Chat message in room ${socket.roomId}: ${socket.name}: ${data.message}`);
+        }
+    });
 });
 
 server.listen(4000, () => {
