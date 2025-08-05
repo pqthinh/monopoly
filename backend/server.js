@@ -1,6 +1,7 @@
 const http = require('http');
 const express = require('express');
 const { Server } = require("socket.io");
+require('dotenv').config();
 const Game = require('./gameLogic.js');
 const { hashStringToNumber } = require('./util.js');
 const { initializeDatabase } = require('./database/init.js');
