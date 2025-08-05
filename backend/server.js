@@ -1,10 +1,30 @@
 const http = require('http');
 const express = require('express');
 const { Server } = require("socket.io");
+require('dotenv').config();
 const Game = require('./gameLogic.js');
 const { hashStringToNumber } = require('./util.js');
+const { initializeDatabase } = require('./database/init.js');
+const GameLog = require('./models/GameLog');
+const User = require('./models/User');
 
 const app = express();
+
+// Middleware
+app.use(express.json());
+
+// Initialize database
+initializeDatabase().then((success) => {
+    if (!success) {
+        console.error('Failed to initialize database. Exiting...');
+        process.exit(1);
+    }
+});
+
+// Routes
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/games', require('./routes/game'));
+
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: { origin: ["http://localhost:3000", "https://monopoly.lexispeak.com"] },
@@ -25,6 +45,39 @@ const updateRoomList = () => {
         hostId: room.hostId
     }));
     io.emit('roomListUpdate', roomListForClient);
+};
+
+// Helper function to save game log
+const saveGameLog = async (room, winner = null, gameEndReason = null) => {
+    try {
+        if (!room.game) return;
+        
+        const players = room.players.map(p => ({
+            userId: p.userId || null,
+            username: p.name,
+            character: p.character || null,
+            socketId: p.id
+        }));
+
+        const winnerData = winner ? {
+            userId: winner.userId || null,
+            username: winner.name,
+            socketId: winner.id
+        } : null;
+
+        await GameLog.create({
+            players,
+            winner: winnerData,
+            duration: room.gameTime - (room.game.remainingTime || 0),
+            logs: room.game.gameLog || [],
+            roomId: room.id,
+            gameEndReason: gameEndReason || 'normal'
+        });
+
+        console.log(`✅ Game log saved for room ${room.id}`);
+    } catch (error) {
+        console.error('❌ Failed to save game log:', error);
+    }
 };
 
 io.on('connection', (socket) => {
@@ -105,7 +158,7 @@ io.on('connection', (socket) => {
         io.to(room.id).emit('gameStarted', room.game.getGameState());
         updateRoomList();
 
-        room.timerInterval = setInterval(() => {
+        room.timerInterval = setInterval(async () => {
             if (room.game.remainingTime > 0) {
                 room.game.remainingTime--;
                 if (room.game.turnTimeRemaining > 0) {
@@ -116,38 +169,53 @@ io.on('connection', (socket) => {
                 io.to(room.id).emit('timeUpdate', room.game.getGameState());
             } else {
                 room.game.endGameByTime();
-                io.to(room.id).emit('updateGameState', room.game.getGameState());
+                const gameState = room.game.getGameState();
+                io.to(room.id).emit('updateGameState', gameState);
+                
+                // Save game log when game ends by time
+                await saveGameLog(room, gameState.winner, 'time_limit');
+                
                 clearInterval(room.timerInterval);
             }
         }, 1000);
     }
 
-    socket.on('playerAction', (action) => {
+    socket.on('playerAction', async (action) => {
         const room = rooms[socket.roomId];
         if (room && room.game) {
             room.game.handleAction(socket.id, action);
-            io.to(socket.roomId).emit('updateGameState', room.game.getGameState());
+            const gameState = room.game.getGameState();
+            io.to(socket.roomId).emit('updateGameState', gameState);
 
             if (room.game.currentPhase === 'game_over') {
                 if (room.timerInterval) clearInterval(room.timerInterval);
+                
+                // Save game log when game ends normally
+                await saveGameLog(room, gameState.winner, 'normal');
             }
         }
     });
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
         console.log(`User disconnected: ${socket.id}`);
         const room = rooms[socket.roomId];
         if (room) {
             if (room.game && !room.game.currentPhase !== 'game_over') {
                 room.game.handlePlayerQuit(socket.id);
-                io.to(socket.roomId).emit('updateGameState', room.game.getGameState());
+                const gameState = room.game.getGameState();
+                io.to(socket.roomId).emit('updateGameState', gameState);
                 
                 room.players = room.players.filter(p => p.id !== socket.id);
                 
                 if (room.players.length < room.minPlayers) {
                     room.game.endGame(null, "không đủ người chơi");
+                    const finalGameState = room.game.getGameState();
+                    
+                    // Save game log when game ends due to insufficient players
+                    await saveGameLog(room, finalGameState.winner, 'insufficient_players');
+                    
                     delete rooms[socket.roomId];
-                    io.to(socket.roomId).emit('updateGameState', room.game.getGameState());
+                    io.to(socket.roomId).emit('updateGameState', finalGameState);
                     if (room.timerInterval) clearInterval(room.timerInterval);
                 }
             } else if (!room.game) {

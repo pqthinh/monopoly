@@ -1,21 +1,41 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../database/database');
 
-const GameLogSchema = new mongoose.Schema({
-    players: [{
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        username: String,
-        character: String,
-    }],
+const GameLog = sequelize.define('GameLog', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    players: {
+        type: DataTypes.JSON,
+        allowNull: false,
+        defaultValue: [],
+    },
     winner: {
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        username: String,
+        type: DataTypes.JSON,
+        allowNull: true,
     },
-    duration: Number, // In seconds
-    logs: [String],
-    createdAt: {
-        type: Date,
-        default: Date.now,
+    duration: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
     },
+    logs: {
+        type: DataTypes.JSON,
+        allowNull: false,
+        defaultValue: [],
+    },
+    roomId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    gameEndReason: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+}, {
+    tableName: 'game_logs',
+    timestamps: true,
 });
 
-module.exports = mongoose.model('GameLog', GameLogSchema);
+module.exports = GameLog;
