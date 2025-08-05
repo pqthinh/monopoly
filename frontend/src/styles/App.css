@@ -23,6 +23,53 @@ body {
     width: 100%;
 }
 
+/* Loading Screen Styles */
+.loading-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url('../../public/assets/background.png') no-repeat center center;
+    background-size: cover;
+}
+
+.loading-content {
+    text-align: center;
+    background: rgba(139, 69, 19, 0.9);
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.loading-title {
+    font-family: 'LogoFont', serif;
+    font-size: 3rem;
+    margin: 0 0 1rem 0;
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.loading-spinner {
+    font-size: 2rem;
+    animation: spin 1s linear infinite;
+    margin: 1rem 0;
+}
+
+.loading-content p {
+    color: #FFD700;
+    font-family: 'TextFont', sans-serif;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 .app {
     display: flex;
     justify-content: center;
