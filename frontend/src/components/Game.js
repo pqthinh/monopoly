@@ -51,14 +51,17 @@ const Game = ({ socket, gameState, myId, user, onLogout }) => {
         } else {
             setShowDecisionPopup(false);
         }
-        if (!gameState || !gameState.players || !myId) {
-            return <div>Đang tải dữ liệu trận đấu... <a href="/">reload</a></div>;
-        }
+        
         return () => {
             setShowDecisionPopup(false);
             setPopupInfo(null);
         }
     }, [gameState, myId]);
+
+    // Handle loading state
+    if (!gameState || !gameState.players || !myId) {
+        return <div>Đang tải dữ liệu trận đấu... <a href="/">reload</a></div>;
+    }
 
 
     return (
