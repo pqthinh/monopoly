@@ -8,18 +8,27 @@ const User = require('../models/User');
 router.post('/register', async (req, res) => {
     const { username, password } = req.body;
     try {
-        let user = await User.findOne({ username });
-        if (user) {
+        // Check if user already exists
+        let existingUser = await User.findOne({ where: { username } });
+        if (existingUser) {
             return res.status(400).json({ msg: 'User already exists' });
         }
-        user = new User({ username, password });
+
+        // Hash password
         const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(password, salt);
-        await user.save();
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // Create user
+        const user = await User.create({
+            username,
+            password: hashedPassword
+        });
+
+        // Create JWT payload and sign token
         const payload = { user: { id: user.id } };
         jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
             if (err) throw err;
-            res.json({ token });
+            res.json({ token, user: { id: user.id, username: user.username } });
         });
     } catch (err) {
         console.error(err.message);
@@ -31,18 +40,23 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
     try {
-        let user = await User.findOne({ username });
+        // Find user
+        let user = await User.findOne({ where: { username } });
         if (!user) {
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
+
+        // Check password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
+
+        // Create JWT payload and sign token
         const payload = { user: { id: user.id } };
         jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
             if (err) throw err;
-            res.json({ token });
+            res.json({ token, user: { id: user.id, username: user.username } });
         });
     } catch (err) {
         console.error(err.message);
