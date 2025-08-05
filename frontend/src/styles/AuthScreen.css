@@ -168,7 +168,7 @@
   z-index: 2;
 }
 
-.input-field {
+.auth-container .input-field {
   width: 100%;
   padding: 15px 15px 15px 50px;
   border: 2px solid rgba(255, 215, 0, 0.3);
@@ -181,11 +181,11 @@
   box-sizing: border-box;
 }
 
-.input-field::placeholder {
+.auth-container .input-field::placeholder {
   color: rgba(255, 215, 0, 0.6);
 }
 
-.input-field:focus {
+.auth-container .input-field:focus {
   outline: none;
   border-color: #FFD700;
   background: rgba(255, 255, 255, 0.15);
@@ -295,7 +295,7 @@
     padding: 10px 15px;
   }
   
-  .input-field {
+  .auth-container .input-field {
     padding: 12px 12px 12px 45px;
   }
 }
