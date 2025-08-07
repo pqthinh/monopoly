@@ -10,24 +10,23 @@ const GameLog = require('./models/GameLog');
 const User = require('./models/User');
 
 const app = express();
-const PORT = process.env.PORT || 4000;
 
-// Middleware
 app.use(express.json());
+console.log("Starting backend server...");
 app.use(cors({
     origin: 'https://monopoly.lexispeak.com',
     methods: ['GET', 'POST']
 }));
 
-// Initialize database
+console.log("Starting backend server...");
 initializeDatabase().then((success) => {
     if (!success) {
         console.error('Failed to initialize database. Exiting...');
         process.exit(1);
     }
+    console.log("Backend server started successfully.");
 });
 
-// Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/games', require('./routes/game'));
 
