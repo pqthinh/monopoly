@@ -50,7 +50,7 @@ async function startServer() {
             },
             maxHttpBufferSize: 1e8, // 100 MB
             pingTimeout: 60000,
-            path: "/socket.io/"
+            path: "/"
         });
 
         let rooms = {};
