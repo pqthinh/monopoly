@@ -1,20 +1,14 @@
-services:
-  backend:
-    build: ./backend
-    ports:
-      - "4000:4000"
-    networks:
-      - monopoly-network
+version: '3.8'
 
-  frontend:
-    build: ./frontend
+services:
+  monopoly-app:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     ports:
       - "8002:8002"
-    depends_on:
-      - backend
-    networks:
-      - monopoly-network
-
-networks:
-  monopoly-network:
-    driver: bridge
+    volumes:
+      - ./backend/data:/app/backend/data
+    environment:
+      - PORT=8002
+    restart: always
