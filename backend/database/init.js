@@ -1,19 +1,24 @@
-const { sequelize, testConnection } = require('./database');
-const User = require('../models/User');
-const GameLog = require('../models/GameLog');
+const { sequelize } = require('./database');
+const fs = require('fs');
+const path = require('path');
+const User = require('../models/User'); // Import model User
 
 const initializeDatabase = async () => {
     try {
-        // Test connection
-        await testConnection();
+        console.log('Initializing database...');
+        const dataDir = path.join(__dirname, 'data');
+        if (!fs.existsSync(dataDir)) {
+            fs.mkdirSync(dataDir, { recursive: true });
+        }
         
-        // Sync all models with database (create tables if they don't exist)
+        await sequelize.authenticate();
+        console.log('✅ SQLite database connection established successfully.');
+
         await sequelize.sync({ alter: true });
-        console.log('✅ Database tables synchronized successfully.');
-        
+        console.log('✅ All models were synchronized successfully.');
         return true;
     } catch (error) {
-        console.error('❌ Database initialization failed:', error);
+        console.error('❌ Unable to initialize database:', error);
         return false;
     }
 };

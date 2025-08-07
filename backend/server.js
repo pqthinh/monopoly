@@ -28,7 +28,7 @@ app.use('/api/games', require('./routes/game'));
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: { 
-        origin: ["http://localhost:3000", "https://monopoly.lexispeak.com"],
+        origin: ["https://monopoly.lexispeak.com"],
         methods: ["GET", "POST"]
     },
     maxHttpBufferSize: 1e8, // 100 MB
