@@ -50,16 +50,16 @@ const AuthScreen = ({ onLogin }) => {
         
         try {
             // For development/demo purposes - create mock authentication when backend is not available
-            if (window.location.hostname === 'localhost') {
-                // Mock successful authentication for development
-                const mockUser = { id: 1, username: username };
-                const mockToken = 'mock-jwt-token-' + Date.now();
-                localStorage.setItem('token', mockToken);
-                localStorage.setItem('user', JSON.stringify(mockUser));
-                gameLogger.info(isLogin ? 'Mock login successful' : 'Mock registration successful', { username });
-                onLogin(mockUser, mockToken);
-                return;
-            }
+            // if (window.location.hostname === 'localhost') {
+            //     // Mock successful authentication for development
+            //     const mockUser = { id: 1, username: username };
+            //     const mockToken = 'mock-jwt-token-' + Date.now();
+            //     localStorage.setItem('token', mockToken);
+            //     localStorage.setItem('user', JSON.stringify(mockUser));
+            //     gameLogger.info(isLogin ? 'Mock login successful' : 'Mock registration successful', { username });
+            //     onLogin(mockUser, mockToken);
+            //     return;
+            // }
 
             const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
             const res = await axios.post(`https://monopoly.lexispeak.com${endpoint}`, {
