@@ -1,7 +1,7 @@
 const http = require('http');
 const express = require('express');
 const { Server } = require("socket.io");
-const cors = require('cors');
+const cors = require('cors'); // Import cors middleware
 require('dotenv').config();
 const Game = require('./gameLogic.js');
 const { hashStringToNumber } = require('./util.js');
@@ -10,14 +10,14 @@ const GameLog = require('./models/GameLog');
 const User = require('./models/User');
 
 const app = express();
+const PORT = process.env.PORT || 4000;
 
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://monopoly.lexispeak.com'],
-  credentials: true,
+    origin: 'https://monopoly.lexispeak.com',
+    methods: ['GET', 'POST']
 }));
-
 
 // Initialize database
 initializeDatabase().then((success) => {
@@ -33,8 +33,8 @@ app.use('/api/games', require('./routes/game'));
 
 const server = http.createServer(app);
 const io = new Server(server, {
-    cors: { 
-        origin: ["http://localhost:3000", "https://monopoly.lexispeak.com"],
+    cors: {
+        origin: ["https://monopoly.lexispeak.com"],
         methods: ["GET", "POST"]
     },
     maxHttpBufferSize: 1e8, // 100 MB
