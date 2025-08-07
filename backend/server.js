@@ -35,6 +35,7 @@ async function startServer() {
         // Routes
         app.use('/api/auth', require('./routes/auth'));
         app.use('/api/games', require('./routes/game'));
+        app.use('/api/logs', require('./routes/logs'));
         app.get('/api/test', (req, res) => res.send('API is working!'));
 
         // Any other requests that don't match the API routes will be handled by React app
