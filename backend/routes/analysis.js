@@ -11,7 +11,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 // @access  Private
 router.post('/:id', auth, async (req, res) => {
     try {
-        const game = await GameLog.findById(req.params.id);
+        const game = await GameLog.findByPk(req.params.id);
         if (!game) {
             return res.status(404).json({ msg: 'Game not found' });
         }
