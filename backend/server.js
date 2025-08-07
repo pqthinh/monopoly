@@ -1,6 +1,7 @@
 const http = require('http');
 const express = require('express');
 const { Server } = require("socket.io");
+const cors = require('cors');
 require('dotenv').config();
 const Game = require('./gameLogic.js');
 const { hashStringToNumber } = require('./util.js');
@@ -12,6 +13,7 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(cors());
 
 // Initialize database
 initializeDatabase().then((success) => {
